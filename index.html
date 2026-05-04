@@ -2,9 +2,15 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+
+  <!-- IMPORTANTE PARA MOBILE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <title>Auditorias MG</title>
   <link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
 
+  <!-- Color barra navegador (modo app) -->
+  <meta name="theme-color" content="#000000">
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -13,58 +19,28 @@
     body {
       background: linear-gradient(180deg, #000000, #1a1a1a);
       color: white;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
       font-family: Arial, sans-serif;
     }
 
-    .logo {
-      width: 180px;
-      margin-bottom: 30px;
-    }
-
     .container-box {
-      width: 320px;
+      width: 100%;
+      max-width: 480px;
+      height: 100vh;
+      margin: auto;
       text-align: center;
       background: #111;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(255,0,0,0.2);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
-    .btn-claro {
-      background-color: #d32f2f;
-      color: white;
-      border: none;
-      width: 100%;
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .btn-claro:hover {
-      background-color: #ff5252;
-      transform: scale(1.03);
-    }
-
-    .activo {
-      background-color: #ff5252 !important;
-      box-shadow: 0 0 10px rgba(255,82,82,0.7);
-    }
-
-    .fade-in {
-      animation: fadeIn 0.4s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .hidden {
-      display: none;
+    .logo {
+      width: 140px;
+      margin: 20px auto;
+      display: block;
     }
 
     .header {
@@ -79,24 +55,56 @@
       color: #ff5252;
     }
 
+    .btn-claro {
+      background-color: #d32f2f;
+      color: white;
+      border: none;
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-claro:hover {
+      background-color: #ff5252;
+      transform: scale(1.02);
+    }
+
     .btn-back {
       background: transparent;
       border: 1px solid #555;
       color: #ccc;
       margin-top: 10px;
+      padding: 12px;
+      border-radius: 10px;
     }
 
     .btn-back:hover {
       background: #222;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 
 <body>
 
-<img src="https://i.postimg.cc/prB8Q5s6/logo-claro.png" class="logo" alt="Claro Logo">
-
   <div class="container-box">
+
+    <img src="https://i.postimg.cc/prB8Q5s6/logo-claro.png" class="logo" alt="Logo">
 
     <!-- SECCIÓN SUPERVISORES -->
     <div id="seccion-supervisores">
@@ -112,7 +120,7 @@
 
       <div class="header">Seleccionar Categoría</div>
 
-      <button class="btn btn-claro" onclick="redirigir('auditoria.html')">Auditoria</button>
+      <button class="btn btn-claro" onclick="redirigir('auditoria.html')">Auditoría</button>
       <button class="btn btn-claro" onclick="redirigir('acompanamiento.html')">Acompañamiento</button>
       <button class="btn btn-claro" onclick="redirigir('clausurado.html')">Clausurado</button>
       <button class="btn btn-claro" onclick="redirigir('prospecto.html')">Prospecto</button>
@@ -143,10 +151,8 @@
           btn.onclick = () => {
             supervisorSeleccionado = nombre;
 
-            // Mostrar nombre
             nombreSup.textContent = nombre;
 
-            // Animación + cambio de vista
             seccionSup.classList.add("hidden");
             seccionCat.classList.remove("hidden");
             seccionCat.classList.add("fade-in");

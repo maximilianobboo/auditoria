@@ -2,46 +2,52 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+
+  <!-- MOBILE -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <title>Clausurados</title>
 
   <link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+  <meta name="theme-color" content="#000000">
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <style>
     body {
-      background: black;
+      background: linear-gradient(180deg, #000000, #1a1a1a);
       color: white;
+      margin: 0;
       font-family: Arial;
-      padding: 20px;
     }
 
-    .box {
-      max-width: 520px;
+    .container-app {
+      max-width: 480px;
       margin: auto;
+      min-height: 100vh;
       background: #111;
-      padding: 25px;
-      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
     }
 
-    /* 🔴 TITULO AJUSTADO */
     #titulo {
       background: #d32f2f;
       color: #fff;
       text-align: center;
-      padding: 10px 8px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       font-weight: bold;
-
-      width: 100%;
-
       font-size: 14px;
+      margin-bottom: 15px;
+
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     label {
-      margin-top: 10px;
+      margin-top: 12px;
       margin-bottom: 5px;
       color: #ccc;
       font-size: 14px;
@@ -51,20 +57,25 @@
       background: #222;
       color: white;
       border: 1px solid #444;
+      border-radius: 8px;
+      padding: 10px;
     }
 
     .btn-main {
       background: #d32f2f;
       color: white;
       width: 100%;
-      margin-top: 12px;
+      margin-top: 18px;
       border: none;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 10px;
     }
 
     .btn-row {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
     .btn-menu {
@@ -72,6 +83,8 @@
       color: #ccc;
       flex: 1;
       border: 1px solid #555;
+      padding: 12px;
+      border-radius: 10px;
     }
 
     .btn-clear {
@@ -79,16 +92,18 @@
       color: white;
       flex: 1;
       border: none;
+      padding: 12px;
+      border-radius: 10px;
     }
 
-    /* ================= MODAL ================= */
+    /* MODAL */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.8);
       display: none;
       justify-content: center;
       align-items: center;
@@ -100,13 +115,9 @@
       padding: 25px;
       border-radius: 12px;
       text-align: center;
-      width: 300px;
+      width: 85%;
+      max-width: 320px;
       box-shadow: 0 0 20px rgba(255,0,0,0.3);
-    }
-
-    .modal-box h3 {
-      color: #4caf50;
-      margin-bottom: 15px;
     }
 
     .btn-ok {
@@ -114,19 +125,18 @@
       color: white;
       border: none;
       width: 100%;
-      padding: 8px;
-      margin-top: 10px;
-      border-radius: 6px;
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 10px;
     }
   </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container-app">
 
-  <!-- ENCABEZADO -->
-  <h2 id="titulo">Clausurados</h2>
+  <div id="titulo">Clausurados</div>
 
   <label>Supervisor</label>
   <input id="supervisorInput" class="form-control mb-2" readonly>
@@ -149,12 +159,10 @@
   <label>Observaciones</label>
   <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
 
-  <!-- ENVIAR -->
   <button class="btn btn-main" onclick="enviarAuditoria()">
     Enviar Auditoría
   </button>
 
-  <!-- BOTONES -->
   <div class="btn-row">
     <button class="btn btn-menu" onclick="volverMenu()">
       Menú
@@ -167,7 +175,7 @@
 
 </div>
 
-<!-- ================= MODAL ================= -->
+<!-- MODAL -->
 <div id="modal" class="modal-overlay">
   <div class="modal-box">
     <h3>✔ Auditoría enviada</h3>
@@ -178,44 +186,34 @@
 
 <script>
 
-// 🔴 GOOGLE APPS SCRIPT
 const URL = "https://script.google.com/macros/s/AKfycbwWG6yBeWRJIQhw8hbDcL-vty_EqTju2xD5xJOinWTDF6O7KBpiAD-FlTAvdlhx-2MnmQ/exec";
-
-// APIs
 const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
 const JSON_PSR = "psragencia.json";
 
-// supervisor
 const params = new URLSearchParams(window.location.search);
 const supervisor = params.get("supervisor") || "";
 
 document.getElementById("titulo").textContent = "Clausurados - " + supervisor;
 document.getElementById("supervisorInput").value = supervisor;
 
-// ================= CAMINANTES =================
+// CAMINANTES
 fetch(API_CAMINANTES)
   .then(r => r.json())
   .then(data => {
-
     const select = document.getElementById("caminanteSelect");
-    const lista = data[supervisor] || [];
-
-    lista.forEach(c => {
+    (data[supervisor] || []).forEach(c => {
       const opt = document.createElement("option");
       opt.value = c;
       opt.textContent = c;
       select.appendChild(opt);
     });
-
   });
 
-// ================= ZONAS =================
+// ZONAS
 document.getElementById("caminanteSelect").addEventListener("change", function () {
-
   fetch(JSON_PSR)
     .then(r => r.json())
     .then(data => {
-
       const zonas = data
         .filter(i => i.Caminante === this.value)
         .map(i => i.Zona);
@@ -229,18 +227,14 @@ document.getElementById("caminanteSelect").addEventListener("change", function (
         opt.textContent = z;
         zonaSelect.appendChild(opt);
       });
-
     });
-
 });
 
-// ================= PSR =================
+// PSR
 document.getElementById("zonaSelect").addEventListener("change", function () {
-
   fetch(JSON_PSR)
     .then(r => r.json())
     .then(data => {
-
       const psrList = data.filter(i => i.Zona === this.value);
 
       const psrSelect = document.getElementById("psrSelect");
@@ -252,19 +246,17 @@ document.getElementById("zonaSelect").addEventListener("change", function () {
         opt.textContent = p["Codigo PSR"] + " - " + p["Nombre PSR"];
         psrSelect.appendChild(opt);
       });
-
     });
-
 });
 
-// ================= ENVIAR =================
+// ENVIAR
 function enviarAuditoria() {
 
   const caminante = document.getElementById("caminanteSelect").value;
   const zona = document.getElementById("zonaSelect").value;
 
   const psrSelect = document.getElementById("psrSelect");
-  const psr = psrSelect.options[psrSelect.selectedIndex].text;
+  const psr = psrSelect.options[psrSelect.selectedIndex]?.text;
 
   const obs = document.getElementById("observaciones").value;
 
@@ -272,12 +264,9 @@ function enviarAuditoria() {
   if (!zona) return alert("Seleccione zona");
   if (!psr) return alert("Seleccione PSR");
 
-  const categoria = document.getElementById("titulo")
-    .textContent.split("-")[0].trim();
-
   const payload = {
     Supervisor: supervisor,
-    Categoria: categoria,
+    Categoria: "Clausurados",
     Caminante: caminante,
     Zona: zona,
     PSR: psr,
@@ -290,24 +279,22 @@ function enviarAuditoria() {
   })
   .then(r => r.text())
   .then(res => {
-
     if (res.includes("OK")) {
       document.getElementById("modal").style.display = "flex";
     } else {
-      alert("Error del servidor: " + res);
+      alert("Error: " + res);
     }
-
   })
   .catch(() => alert("Error de conexión ❌"));
 }
 
-// ================= MODAL =================
+// MODAL
 function cerrarModal() {
   document.getElementById("modal").style.display = "none";
   window.location.href = "index.html";
 }
 
-// ================= LIMPIAR =================
+// LIMPIAR
 function limpiarFormulario() {
   document.getElementById("caminanteSelect").value = "";
   document.getElementById("zonaSelect").innerHTML = '<option value="">Seleccione zona</option>';
@@ -315,7 +302,7 @@ function limpiarFormulario() {
   document.getElementById("observaciones").value = "";
 }
 
-// ================= MENÚ =================
+// VOLVER
 function volverMenu() {
   window.location.href = "index.html";
 }
