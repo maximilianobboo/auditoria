@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Prospecto</title>
+
+  <link rel="icon" type="image/png" href="/logo_movil.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 500px;
+      margin: auto;
+      background: #111;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    /* 🔴 TITULO UNIFICADO */
+    #titulo {
+      background: #d32f2f;
+      color: #fff;
+      text-align: center;
+      padding: 10px 8px;
+      border-radius: 8px;
+      font-weight: bold;
+
+      width: 100%;
+
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    label {
+      margin-top: 10px;
+      margin-bottom: 5px;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .form-control {
+      background: #222;
+      border: 1px solid #444;
+      color: white;
+    }
+
+    .btn-claro {
+      background: #d32f2f;
+      color: white;
+      width: 100%;
+      margin-top: 15px;
+      border: none;
+    }
+
+    .btn-back {
+      background: #333;
+      border: 1px solid #555;
+      color: #ccc;
+    }
+
+    .btn-clear {
+      background: #2e7d32;
+      color: white;
+      border: none;
+    }
+
+    /* ================= MODAL ================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-box {
+      background: #1c1c1c;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 0 20px rgba(255,0,0,0.3);
+    }
+
+    .modal-box h3 {
+      color: #4caf50;
+      margin-bottom: 15px;
+    }
+
+    .btn-ok {
+      background: #4caf50;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+
+    .btn-ok:hover {
+      background: #43a047;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h2 id="titulo">Prospecto</h2>
+
+  <form id="form">
+
+    <label>Nombre y Apellido</label>
+    <input id="nombre" class="form-control" type="text" required>
+
+    <label>Nombre Fantasía</label>
+    <input id="fantasia" class="form-control" type="text" required>
+
+    <label>Domicilio</label>
+    <input id="domicilio" class="form-control" type="text" required>
+
+    <label>Teléfono</label>
+    <input id="telefono" class="form-control" type="number" required>
+
+    <label>Email</label>
+    <input id="email" class="form-control" type="email" required>
+
+    <label>Observaciones</label>
+    <textarea id="observaciones" class="form-control" rows="3"></textarea>
+
+    <label>Foto</label>
+    <input id="foto" class="form-control" type="file" accept="image/*">
+
+    <button class="btn btn-claro" type="submit">
+      Enviar Auditoría
+    </button>
+
+    <div class="d-flex gap-2 mt-2">
+
+      <button type="button" class="btn btn-back w-50" onclick="volver()">
+        Menú
+      </button>
+
+      <button type="button" class="btn btn-clear w-50" onclick="limpiarFormulario()">
+        Borrar formulario
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+<div id="modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>✔ Auditoría enviada</h3>
+    <p>El registro fue guardado correctamente.</p>
+    <button class="btn-ok" onclick="cerrarModal()">OK</button>
+  </div>
+</div>
+
+<script>
+
+const URL = "https://script.google.com/macros/s/AKfycbzBZ3QHSzgRl6UupNEnX0nebiOECLcGyjZ22h7YXEO74pLMHl3Gewuvx2K4NzagTjP7/exec";
+
+const params = new URLSearchParams(window.location.search);
+const supervisor = params.get("supervisor") || "";
+
+document.getElementById("titulo").textContent =
+  "Prospecto - " + (supervisor || "Sin supervisor");
+
+// ================= ENVIAR =================
+document.getElementById("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const file = document.getElementById("foto").files[0];
+  let base64 = "";
+
+  if (file) {
+    base64 = await new Promise(resolve => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(",")[1]);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const payload = {
+    Supervisor: supervisor || "",
+    Categoria: "Prospecto",
+    NombreApellido: document.getElementById("nombre").value,
+    NombreFantasia: document.getElementById("fantasia").value,
+    Domicilio: document.getElementById("domicilio").value,
+    Telefono: document.getElementById("telefono").value,
+    Email: document.getElementById("email").value,
+    Observaciones: document.getElementById("observaciones").value,
+    Foto: base64
+  };
+
+  try {
+    const res = await fetch(URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    const text = await res.text();
+
+    if (text.includes("OK")) {
+
+      document.getElementById("form").reset();
+      document.getElementById("foto").value = "";
+
+      document.getElementById("modal").style.display = "flex";
+
+    } else {
+      alert("Error del servidor: " + text);
+    }
+
+  } catch (error) {
+    alert("Error de conexión ❌");
+  }
+});
+
+// ================= MODAL =================
+function cerrarModal() {
+  document.getElementById("modal").style.display = "none";
+  window.location.href = "index.html";
+}
+
+// ================= LIMPIAR =================
+function limpiarFormulario() {
+  document.getElementById("form").reset();
+  document.getElementById("foto").value = "";
+}
+
+// ================= VOLVER =================
+function volver() {
+  window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>

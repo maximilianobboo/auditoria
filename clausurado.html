@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clausurados</title>
+
+  <link rel="icon" type="image/png" href="/logo_movil.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: Arial;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 520px;
+      margin: auto;
+      background: #111;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    /* 🔴 TITULO AJUSTADO */
+    #titulo {
+      background: #d32f2f;
+      color: #fff;
+      text-align: center;
+      padding: 10px 8px;
+      border-radius: 8px;
+      font-weight: bold;
+
+      width: 100%;
+
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    label {
+      margin-top: 10px;
+      margin-bottom: 5px;
+      color: #ccc;
+      font-size: 14px;
+    }
+
+    .form-control, .form-select {
+      background: #222;
+      color: white;
+      border: 1px solid #444;
+    }
+
+    .btn-main {
+      background: #d32f2f;
+      color: white;
+      width: 100%;
+      margin-top: 12px;
+      border: none;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .btn-menu {
+      background: #333;
+      color: #ccc;
+      flex: 1;
+      border: 1px solid #555;
+    }
+
+    .btn-clear {
+      background: #2e7d32;
+      color: white;
+      flex: 1;
+      border: none;
+    }
+
+    /* ================= MODAL ================= */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-box {
+      background: #1c1c1c;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      width: 300px;
+      box-shadow: 0 0 20px rgba(255,0,0,0.3);
+    }
+
+    .modal-box h3 {
+      color: #4caf50;
+      margin-bottom: 15px;
+    }
+
+    .btn-ok {
+      background: #4caf50;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <!-- ENCABEZADO -->
+  <h2 id="titulo">Clausurados</h2>
+
+  <label>Supervisor</label>
+  <input id="supervisorInput" class="form-control mb-2" readonly>
+
+  <label>Caminante</label>
+  <select id="caminanteSelect" class="form-select mb-2">
+    <option value="">Seleccione caminante</option>
+  </select>
+
+  <label>Zona</label>
+  <select id="zonaSelect" class="form-select mb-2">
+    <option value="">Seleccione zona</option>
+  </select>
+
+  <label>Código PSR - Nombre PSR</label>
+  <select id="psrSelect" class="form-select mb-2">
+    <option value="">Seleccione PSR</option>
+  </select>
+
+  <label>Observaciones</label>
+  <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
+
+  <!-- ENVIAR -->
+  <button class="btn btn-main" onclick="enviarAuditoria()">
+    Enviar Auditoría
+  </button>
+
+  <!-- BOTONES -->
+  <div class="btn-row">
+    <button class="btn btn-menu" onclick="volverMenu()">
+      Menú
+    </button>
+
+    <button class="btn btn-clear" onclick="limpiarFormulario()">
+      Borrar formulario
+    </button>
+  </div>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+<div id="modal" class="modal-overlay">
+  <div class="modal-box">
+    <h3>✔ Auditoría enviada</h3>
+    <p>El registro fue guardado correctamente.</p>
+    <button class="btn-ok" onclick="cerrarModal()">OK</button>
+  </div>
+</div>
+
+<script>
+
+// 🔴 GOOGLE APPS SCRIPT
+const URL = "https://script.google.com/macros/s/AKfycbwWG6yBeWRJIQhw8hbDcL-vty_EqTju2xD5xJOinWTDF6O7KBpiAD-FlTAvdlhx-2MnmQ/exec";
+
+// APIs
+const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
+const JSON_PSR = "psragencia.json";
+
+// supervisor
+const params = new URLSearchParams(window.location.search);
+const supervisor = params.get("supervisor") || "";
+
+document.getElementById("titulo").textContent = "Clausurados - " + supervisor;
+document.getElementById("supervisorInput").value = supervisor;
+
+// ================= CAMINANTES =================
+fetch(API_CAMINANTES)
+  .then(r => r.json())
+  .then(data => {
+
+    const select = document.getElementById("caminanteSelect");
+    const lista = data[supervisor] || [];
+
+    lista.forEach(c => {
+      const opt = document.createElement("option");
+      opt.value = c;
+      opt.textContent = c;
+      select.appendChild(opt);
+    });
+
+  });
+
+// ================= ZONAS =================
+document.getElementById("caminanteSelect").addEventListener("change", function () {
+
+  fetch(JSON_PSR)
+    .then(r => r.json())
+    .then(data => {
+
+      const zonas = data
+        .filter(i => i.Caminante === this.value)
+        .map(i => i.Zona);
+
+      const zonaSelect = document.getElementById("zonaSelect");
+      zonaSelect.innerHTML = '<option value="">Seleccione zona</option>';
+
+      [...new Set(zonas)].forEach(z => {
+        const opt = document.createElement("option");
+        opt.value = z;
+        opt.textContent = z;
+        zonaSelect.appendChild(opt);
+      });
+
+    });
+
+});
+
+// ================= PSR =================
+document.getElementById("zonaSelect").addEventListener("change", function () {
+
+  fetch(JSON_PSR)
+    .then(r => r.json())
+    .then(data => {
+
+      const psrList = data.filter(i => i.Zona === this.value);
+
+      const psrSelect = document.getElementById("psrSelect");
+      psrSelect.innerHTML = '<option value="">Seleccione PSR</option>';
+
+      psrList.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p["Codigo PSR"];
+        opt.textContent = p["Codigo PSR"] + " - " + p["Nombre PSR"];
+        psrSelect.appendChild(opt);
+      });
+
+    });
+
+});
+
+// ================= ENVIAR =================
+function enviarAuditoria() {
+
+  const caminante = document.getElementById("caminanteSelect").value;
+  const zona = document.getElementById("zonaSelect").value;
+
+  const psrSelect = document.getElementById("psrSelect");
+  const psr = psrSelect.options[psrSelect.selectedIndex].text;
+
+  const obs = document.getElementById("observaciones").value;
+
+  if (!caminante) return alert("Seleccione caminante");
+  if (!zona) return alert("Seleccione zona");
+  if (!psr) return alert("Seleccione PSR");
+
+  const categoria = document.getElementById("titulo")
+    .textContent.split("-")[0].trim();
+
+  const payload = {
+    Supervisor: supervisor,
+    Categoria: categoria,
+    Caminante: caminante,
+    Zona: zona,
+    PSR: psr,
+    Observaciones: obs
+  };
+
+  fetch(URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.text())
+  .then(res => {
+
+    if (res.includes("OK")) {
+      document.getElementById("modal").style.display = "flex";
+    } else {
+      alert("Error del servidor: " + res);
+    }
+
+  })
+  .catch(() => alert("Error de conexión ❌"));
+}
+
+// ================= MODAL =================
+function cerrarModal() {
+  document.getElementById("modal").style.display = "none";
+  window.location.href = "index.html";
+}
+
+// ================= LIMPIAR =================
+function limpiarFormulario() {
+  document.getElementById("caminanteSelect").value = "";
+  document.getElementById("zonaSelect").innerHTML = '<option value="">Seleccione zona</option>';
+  document.getElementById("psrSelect").innerHTML = '<option value="">Seleccione PSR</option>';
+  document.getElementById("observaciones").value = "";
+}
+
+// ================= MENÚ =================
+function volverMenu() {
+  window.location.href = "index.html";
+}
+
+</script>
+
+</body>
+</html>
