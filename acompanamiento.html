@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+
+<title>Acompañamiento</title>
+
+<link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<style>
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background: black;
+  color: white;
+  font-family: Arial;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.box {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #111;
+  padding: 20px 15px 40px;
+}
+
+#titulo {
+  background: #d32f2f;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+label {
+  margin-top:10px;
+  margin-bottom:5px;
+  color:#ccc;
+  font-size:14px;
+}
+
+.form-control, .form-select {
+  background:#222;
+  color:white;
+  border:1px solid #444;
+}
+
+input, select, textarea, button {
+  font-size: 16px;
+}
+
+.selected-red {
+  background:#d32f2f !important;
+  color:#fff !important;
+  font-weight:bold;
+}
+
+.btn-main {
+  background:#1976d2;
+  color:white;
+  width:100%;
+  margin-top:15px;
+  border:none;
+}
+
+.btn-row {
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.btn-menu {
+  background:#333;
+  color:#ccc;
+  flex:1;
+  border:1px solid #555;
+}
+
+.btn-clear {
+  background:#2e7d32;
+  color:white;
+  flex:1;
+  border:none;
+}
+
+.row-flex {
+  display:flex;
+  gap:10px;
+}
+
+.col-flex {
+  flex:1;
+}
+
+#bloque1,#bloque2,#bloque3,#bloqueMulti,#bloqueRecargas {
+  display:none;
+}
+
+.stock-row{
+  display:flex;
+  justify-content:center;
+  gap:60px;
+  margin-bottom:10px;
+}
+
+.stock-option{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.stock-option input{
+  transform:scale(1.4);
+  accent-color:#d32f2f;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2 id="titulo"></h2>
+
+<label>Supervisor</label>
+<input id="supervisorInput" class="form-control mb-2" readonly>
+
+<div class="row-flex">
+  <div class="col-flex">
+    <label>Caminante</label>
+    <select id="caminanteSelect" class="form-select">
+      <option value="">Seleccione</option>
+    </select>
+  </div>
+
+  <div class="col-flex">
+    <label>Zona</label>
+    <select id="zonaSelect" class="form-select">
+      <option value="">Seleccione</option>
+    </select>
+  </div>
+</div>
+
+<label>PSR</label>
+<select id="psrSelect" class="form-select mb-2">
+  <option value="">Seleccione PSR</option>
+</select>
+
+<div id="bloque1" class="row-flex">
+  <div class="col-flex">
+    <label>Material POP</label>
+    <select id="materialPOP" class="form-select">
+      <option value="">Seleccione</option>
+      <option>Correcto</option>
+      <option>Quemado/Deteriorado</option>
+      <option>Sin material</option>
+    </select>
+  </div>
+
+  <div class="col-flex">
+    <label>Stock Lotes</label>
+    <select id="stockLotes" class="form-select">
+      <option value="">Seleccione</option>
+      <option>Correcto</option>
+      <option>Incompleto</option>
+      <option>Sin stock</option>
+      <option>Vencido/Proximo a vencer</option>
+    </select>
+  </div>
+</div>
+
+<div id="bloque2" class="row-flex">
+  <div class="col-flex">
+    <label>Claro Pay</label>
+    <select id="claroPay" class="form-select">
+      <option value="">Seleccione</option>
+      <option>Si tiene, sabe beneficio 8%</option>
+      <option>Desconoce</option>
+      <option>No tiene, no le interesa</option>  
+    </select>
+  </div>
+
+  <div class="col-flex">
+    <label>Claro Comercios</label>
+    <select id="claroComercios" class="form-select">
+      <option value="">Seleccione</option>
+      <option>Instalado</option>
+      <option>No utiliza/Bloqueado</option>
+      <option>Desconoce, no le interesa</option>
+    </select>
+  </div>
+</div>
+
+<div id="bloque3" class="row-flex">
+  <div class="col-flex">
+    <label>Referidos</label>
+    <select id="referidos" class="form-select">
+      <option value="">Seleccione</option>
+      <option>Conoce</option>
+      <option>No conoce</option>
+    </select>
+  </div>
+
+  <div class="col-flex">
+    <label>SIM Distribuida</label>
+    <select id="sim" class="form-select">
+      <option value="">Seleccione</option>
+      <option>Posee</option>
+      <option>Sin stock</option>
+      <option>Vencida/Proximo a vencer</option>
+    </select>
+  </div>
+</div>
+
+<div id="bloqueMulti">
+  <label>Stock Multimarca</label>
+  <div class="stock-row">
+    <div class="stock-option">
+      <input type="radio" name="stockMulti" value="Si">
+      <label>Si</label>
+    </div>
+    <div class="stock-option">
+      <input type="radio" name="stockMulti" value="No">
+      <label>No</label>
+    </div>
+  </div>
+</div>
+
+<div id="bloqueRecargas">
+
+  <label>Canal recargas</label>
+  <input id="canalRecargas" class="form-control mb-2">
+
+  <label>Comisión mayorista</label>
+  <input id="comisionMayorista" type="number" class="form-control mb-2">
+
+  <div class="row-flex">
+    <div class="col-flex">
+      <label>Costo fijo por uso de multimarca</label>
+      <input id="costoFijo" type="number" class="form-control mb-2">
+    </div>
+
+    <div class="col-flex">
+      <label>Monto adicional</label>
+      <input id="montoAdicional" type="number" class="form-control mb-1">
+      <small style="color:#aaa;font-size:12px;">Si no cobran adicional = 0</small>
+    </div>
+  </div>
+
+</div>
+
+<label>Observaciones/Puntos a mejorar</label>
+<textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
+
+<label>Fotos</label>
+<input type="file" id="fotos" class="form-control mb-2" multiple accept="image/*">
+
+<button class="btn btn-main" onclick="enviarAuditoria()">Enviar Acompañamiento</button>
+
+<div class="btn-row">
+  <button class="btn btn-menu" onclick="volverMenu()">Menú</button>
+  <button class="btn btn-clear" onclick="location.reload()">Borrar formulario</button>
+</div>
+
+</div>
+
+<!-- MODALES -->
+<div class="modal fade" id="modalExito" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5>✔ Enviado</h5>
+      </div>
+      <div class="modal-body text-center">
+        Acompañamiento enviado con éxito
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-success w-100" onclick="cerrarExito()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalError" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5>⚠ Atención</h5>
+      </div>
+      <div class="modal-body text-center">
+        Complete los campos faltantes
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-danger w-100" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+const URL = "https://script.google.com/macros/s/AKfycbzCcV3m9s3Q--icGcvDo6kh6GH4EVgOsSBn6iKkUwlKhr-NGA_A8tHo2_FbcmBSQw/exec";
+const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
+const JSON_PSR = "psragencia.json";
+
+const params = new URLSearchParams(window.location.search);
+const supervisor = params.get("supervisor") || "";
+
+const categoria = "Acompañamiento";
+
+document.getElementById("titulo").textContent = categoria + " - " + supervisor;
+document.getElementById("supervisorInput").value = supervisor;
+
+const caminanteSelect = document.getElementById("caminanteSelect");
+const zonaSelect = document.getElementById("zonaSelect");
+const psrSelect = document.getElementById("psrSelect");
+
+const bloque1 = document.getElementById("bloque1");
+const bloque2 = document.getElementById("bloque2");
+const bloque3 = document.getElementById("bloque3");
+const bloqueMulti = document.getElementById("bloqueMulti");
+const bloqueRecargas = document.getElementById("bloqueRecargas");
+
+function pintarSelect(s){
+  s.classList.toggle("selected-red", s.value!=="");
+}
+
+fetch(API_CAMINANTES)
+.then(r=>r.json())
+.then(data=>{
+  if(data[supervisor]){
+    data[supervisor].forEach(c=>{
+      caminanteSelect.innerHTML += `<option>${c}</option>`;
+    });
+  }
+});
+
+document.querySelectorAll("select").forEach(s=>{
+  s.addEventListener("change", ()=>pintarSelect(s));
+});
+
+caminanteSelect.onchange = function(){
+  fetch(JSON_PSR).then(r=>r.json()).then(data=>{
+    zonaSelect.innerHTML='<option value="">Seleccione</option>';
+    [...new Set(data.filter(i=>i.Caminante===this.value).map(i=>i.Zona))]
+    .forEach(z=>zonaSelect.innerHTML+=`<option>${z}</option>`);
+  });
+};
+
+zonaSelect.onchange = function(){
+  fetch(JSON_PSR).then(r=>r.json()).then(data=>{
+    psrSelect.innerHTML='<option>Seleccione PSR</option>';
+    data.filter(i=>i.Zona===this.value)
+    .forEach(p=>{
+      psrSelect.innerHTML+=`<option>${p["Codigo PSR"]} - ${p["Nombre PSR"]}</option>`;
+    });
+  });
+};
+
+psrSelect.onchange = ()=>bloque1.style.display="flex";
+
+materialPOP.onchange = stockLotes.onchange = ()=>{
+  if(materialPOP.value && stockLotes.value) bloque2.style.display="flex";
+};
+
+claroPay.onchange = claroComercios.onchange = ()=>{
+  if(claroPay.value && claroComercios.value) bloque3.style.display="flex";
+};
+
+referidos.onchange = sim.onchange = ()=>{
+  if(referidos.value && sim.value) bloqueMulti.style.display="block";
+};
+
+document.querySelectorAll('input[name="stockMulti"]').forEach(r=>{
+  r.addEventListener("change",function(){
+    bloqueRecargas.style.display=this.value==="Si"?"block":"none";
+  });
+});
+
+async function enviarAuditoria(){
+
+  const stockMulti=document.querySelector('input[name="stockMulti"]:checked');
+
+  if(
+    !caminanteSelect.value||
+    !zonaSelect.value||
+    !psrSelect.value||
+    !materialPOP.value||
+    !stockLotes.value||
+    !claroPay.value||
+    !claroComercios.value||
+    !referidos.value||
+    !sim.value||
+    !stockMulti
+  ){
+    new bootstrap.Modal(document.getElementById('modalError')).show();
+    return;
+  }
+
+  let fotos=[];
+  for(let f of document.getElementById("fotos").files){
+    fotos.push(await toBase64(f));
+  }
+
+  const data={
+    supervisor,
+    categoria,
+    caminante:caminanteSelect.value,
+    zona:zonaSelect.value,
+    psr:psrSelect.value,
+    materialPOP:materialPOP.value,
+    stockLotes:stockLotes.value,
+    claroPay:claroPay.value,
+    claroComercios:claroComercios.value,
+    referidos:referidos.value,
+    sim:sim.value,
+    stockMulti:stockMulti.value,
+    canalRecargas:canalRecargas.value,
+    comisionMayorista:comisionMayorista.value,
+    costoFijo:costoFijo.value,
+    montoAdicional:montoAdicional.value,
+    observaciones:observaciones.value,
+    fotos:fotos.join(", ")
+  };
+
+  fetch(URL,{method:"POST",body:JSON.stringify(data)})
+  .then(()=>{
+    new bootstrap.Modal(document.getElementById('modalExito')).show();
+    setTimeout(()=>window.location.href="index.html",1500);
+  });
+}
+
+function toBase64(f){
+  return new Promise(r=>{
+    let fr=new FileReader();
+    fr.onload=()=>r(fr.result);
+    fr.readAsDataURL(f);
+  });
+}
+
+function cerrarExito(){
+  window.location.href="index.html";
+}
+
+function volverMenu(){
+  window.location.href="index.html";
+}
+
+</script>
+
+</body>
+</html>
