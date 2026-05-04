@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- 📱 MODO APP MOBILE -->
+<!-- 📱 APP MOBILE -->
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -189,8 +189,8 @@ input, select, textarea, button {
       <option value="">Seleccione</option>
       <option>Correcto</option>
       <option>Incompleto</option>
-      <option>Vencido/Proximo a vencer</option>
       <option>Sin stock</option>
+      <option>Vencido/Proximo a vencer</option>
     </select>
   </div>
 </div>
@@ -201,8 +201,8 @@ input, select, textarea, button {
     <select id="claroPay" class="form-select">
       <option value="">Seleccione</option>
       <option>Si tiene, sabe beneficio 8%</option>
-      <option>No sabe</option>
-      <option>No tiene, no le interesa</option>
+      <option>Desconoce</option>
+      <option>No tiene, no le interesa</option>  
     </select>
   </div>
 
@@ -210,9 +210,9 @@ input, select, textarea, button {
     <label>Claro Comercios</label>
     <select id="claroComercios" class="form-select">
       <option value="">Seleccione</option>
-      <option>Conoce</option>
+      <option>Instalado</option>
       <option>No utiliza/Bloqueado</option>
-      <option>No tiene, desconoce</option>
+      <option>Desconoce, no le interesa</option>
     </select>
   </div>
 </div>
@@ -232,8 +232,8 @@ input, select, textarea, button {
     <select id="sim" class="form-select">
       <option value="">Seleccione</option>
       <option>Posee</option>
-      <option>Vencida/Proxima a vencer</option>
-      <option>No posee</option>
+      <option>Sin stock</option>
+      <option>Vencida/Proximo a vencer</option>
     </select>
   </div>
 </div>
@@ -269,28 +269,62 @@ input, select, textarea, button {
     <div class="col-flex">
       <label>Monto adicional</label>
       <input id="montoAdicional" type="number" class="form-control mb-1">
-      <small style="color:#aaa; font-size:12px;">
-        Si no cobran adicional colocar 0
-      </small>
+      <small style="color:#aaa;font-size:12px;">Si no cobran adicional = 0</small>
     </div>
   </div>
 
 </div>
 
-<label>Observaciones / Puntos a mejorar</label>
+<label>Observaciones</label>
 <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
 
-<label>Adjuntar fotos</label>
+<label>Fotos</label>
 <input type="file" id="fotos" class="form-control mb-2" multiple accept="image/*">
 
 <button class="btn btn-main" onclick="enviarAuditoria()">Enviar Auditoría</button>
 
 <div class="btn-row">
   <button class="btn btn-menu" onclick="volverMenu()">Menú</button>
-  <button class="btn btn-clear" onclick="location.reload()">Borrar formulario</button>
+  <button class="btn btn-clear" onclick="location.reload()">Borrar</button>
 </div>
 
 </div>
+
+<!-- 🔔 MODAL ÉXITO -->
+<div class="modal fade" id="modalExito" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5>✔ Enviado</h5>
+      </div>
+      <div class="modal-body text-center">
+        Auditoría enviada con éxito
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-success w-100" onclick="cerrarExito()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⚠ MODAL ERROR -->
+<div class="modal fade" id="modalError" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5>⚠ Atención</h5>
+      </div>
+      <div class="modal-body text-center">
+        Complete los campos faltantes
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-danger w-100" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 
@@ -315,8 +349,8 @@ const bloque3 = document.getElementById("bloque3");
 const bloqueMulti = document.getElementById("bloqueMulti");
 const bloqueRecargas = document.getElementById("bloqueRecargas");
 
-function pintarSelect(select){
-  select.classList.toggle("selected-red", select.value !== "");
+function pintarSelect(s){
+  s.classList.toggle("selected-red", s.value!=="");
 }
 
 fetch(API_CAMINANTES)
@@ -334,30 +368,24 @@ document.querySelectorAll("select").forEach(s=>{
 });
 
 caminanteSelect.onchange = function(){
-  fetch(JSON_PSR)
-  .then(r=>r.json())
-  .then(data=>{
-    zonaSelect.innerHTML = '<option value="">Seleccione</option>';
+  fetch(JSON_PSR).then(r=>r.json()).then(data=>{
+    zonaSelect.innerHTML='<option value="">Seleccione</option>';
     [...new Set(data.filter(i=>i.Caminante===this.value).map(i=>i.Zona))]
-    .forEach(z=>{
-      zonaSelect.innerHTML += `<option>${z}</option>`;
-    });
+    .forEach(z=>zonaSelect.innerHTML+=`<option>${z}</option>`);
   });
 };
 
 zonaSelect.onchange = function(){
-  fetch(JSON_PSR)
-  .then(r=>r.json())
-  .then(data=>{
-    psrSelect.innerHTML = '<option value="">Seleccione PSR</option>';
+  fetch(JSON_PSR).then(r=>r.json()).then(data=>{
+    psrSelect.innerHTML='<option>Seleccione PSR</option>';
     data.filter(i=>i.Zona===this.value)
     .forEach(p=>{
-      psrSelect.innerHTML += `<option>${p["Codigo PSR"]} - ${p["Nombre PSR"]}</option>`;
+      psrSelect.innerHTML+=`<option>${p["Codigo PSR"]} - ${p["Nombre PSR"]}</option>`;
     });
   });
 };
 
-psrSelect.onchange = ()=> bloque1.style.display="flex";
+psrSelect.onchange = ()=>bloque1.style.display="flex";
 
 materialPOP.onchange = stockLotes.onchange = ()=>{
   if(materialPOP.value && stockLotes.value) bloque2.style.display="flex";
@@ -372,51 +400,73 @@ referidos.onchange = sim.onchange = ()=>{
 };
 
 document.querySelectorAll('input[name="stockMulti"]').forEach(r=>{
-  r.addEventListener("change", function(){
-    bloqueRecargas.style.display = this.value === "Si" ? "block" : "none";
+  r.addEventListener("change",function(){
+    bloqueRecargas.style.display=this.value==="Si"?"block":"none";
   });
 });
 
 async function enviarAuditoria(){
-  const stockMulti = document.querySelector('input[name="stockMulti"]:checked');
-  if(!stockMulti){ alert("Completar campos"); return; }
+
+  const stockMulti=document.querySelector('input[name="stockMulti"]:checked');
+
+  if(
+    !caminanteSelect.value||
+    !zonaSelect.value||
+    !psrSelect.value||
+    !materialPOP.value||
+    !stockLotes.value||
+    !claroPay.value||
+    !claroComercios.value||
+    !referidos.value||
+    !sim.value||
+    !stockMulti
+  ){
+    new bootstrap.Modal(document.getElementById('modalError')).show();
+    return;
+  }
 
   let fotos=[];
   for(let f of document.getElementById("fotos").files){
     fotos.push(await toBase64(f));
   }
 
-  const data = {
-    supervisor,
-    categoria,
-    caminante: caminanteSelect.value,
-    zona: zonaSelect.value,
-    psr: psrSelect.value,
-    materialPOP: materialPOP.value,
-    stockLotes: stockLotes.value,
-    claroPay: claroPay.value,
-    claroComercios: claroComercios.value,
-    referidos: referidos.value,
-    sim: sim.value,
-    stockMulti: stockMulti.value,
-    canalRecargas: canalRecargas.value,
-    comisionMayorista: comisionMayorista.value,
-    costoFijo: costoFijo.value,
-    montoAdicional: montoAdicional.value,
-    observaciones: observaciones.value,
-    fotos: fotos.join(", ")
+  const data={
+    supervisor,categoria,
+    caminante:caminanteSelect.value,
+    zona:zonaSelect.value,
+    psr:psrSelect.value,
+    materialPOP:materialPOP.value,
+    stockLotes:stockLotes.value,
+    claroPay:claroPay.value,
+    claroComercios:claroComercios.value,
+    referidos:referidos.value,
+    sim:sim.value,
+    stockMulti:stockMulti.value,
+    canalRecargas:canalRecargas.value,
+    comisionMayorista:comisionMayorista.value,
+    costoFijo:costoFijo.value,
+    montoAdicional:montoAdicional.value,
+    observaciones:observaciones.value,
+    fotos:fotos.join(", ")
   };
 
   fetch(URL,{method:"POST",body:JSON.stringify(data)})
-  .then(()=>window.location.href="index.html");
+  .then(()=>{
+    new bootstrap.Modal(document.getElementById('modalExito')).show();
+    setTimeout(()=>window.location.href="index.html",1500);
+  });
 }
 
-function toBase64(file){
+function toBase64(f){
   return new Promise(r=>{
     let fr=new FileReader();
     fr.onload=()=>r(fr.result);
-    fr.readAsDataURL(file);
+    fr.readAsDataURL(f);
   });
+}
+
+function cerrarExito(){
+  window.location.href="index.html";
 }
 
 function volverMenu(){
