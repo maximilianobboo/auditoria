@@ -59,13 +59,6 @@
       padding: 10px;
     }
 
-    /* 🔴 SELECT VISUAL ROJO GLOBAL */
-    .form-select {
-      background-color: #222;
-      color: white;
-      transition: all 0.2s ease;
-    }
-
     .form-select option {
       background-color: #111;
       color: white;
@@ -76,7 +69,6 @@
       box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
     }
 
-    /* cuando hay selección */
     .form-select.has-value {
       background-color: #d32f2f !important;
       color: #fff !important;
@@ -119,7 +111,6 @@
       border-radius: 10px;
     }
 
-    /* MODAL */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -193,7 +184,7 @@
 
 </div>
 
-<!-- MODAL -->
+<!-- MODAL ÉXITO -->
 <div id="modal" class="modal-overlay">
   <div class="modal-box">
     <h3>✔ Auditoría enviada</h3>
@@ -201,6 +192,25 @@
     <button class="btn-ok" onclick="cerrarModal()">OK</button>
   </div>
 </div>
+
+<!-- MODAL ERROR BOOTSTRAP -->
+<div class="modal fade" id="modalError" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-0">
+        <h5>⚠ Atención</h5>
+      </div>
+      <div class="modal-body text-center">
+        Complete los campos faltantes
+      </div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-danger w-100" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 
@@ -227,16 +237,13 @@ fetch(API_CAMINANTES)
     });
   });
 
-/* ZONAS */
 document.getElementById("caminanteSelect").addEventListener("change", function () {
   actualizarVisual("caminanteSelect");
 
   fetch(JSON_PSR)
     .then(r => r.json())
     .then(data => {
-      const zonas = data
-        .filter(i => i.Caminante === this.value)
-        .map(i => i.Zona);
+      const zonas = data.filter(i => i.Caminante === this.value).map(i => i.Zona);
 
       const zonaSelect = document.getElementById("zonaSelect");
       zonaSelect.innerHTML = '<option value="">Seleccione zona</option>';
@@ -250,7 +257,6 @@ document.getElementById("caminanteSelect").addEventListener("change", function (
     });
 });
 
-/* PSR */
 document.getElementById("zonaSelect").addEventListener("change", function () {
   actualizarVisual("zonaSelect");
 
@@ -271,25 +277,29 @@ document.getElementById("zonaSelect").addEventListener("change", function () {
     });
 });
 
-/* 🔴 IMPORTANTE: también aplica visual al PSR */
 document.getElementById("psrSelect").addEventListener("change", function () {
   actualizarVisual("psrSelect");
 });
+
+/* ERROR MODAL */
+function mostrarError() {
+  const modal = new bootstrap.Modal(document.getElementById("modalError"));
+  modal.show();
+}
 
 /* ENVÍO */
 function enviarAuditoria() {
 
   const caminante = document.getElementById("caminanteSelect").value;
   const zona = document.getElementById("zonaSelect").value;
-
   const psrSelect = document.getElementById("psrSelect");
-  const psr = psrSelect.options[psrSelect.selectedIndex]?.text;
 
+  const psr = psrSelect.options[psrSelect.selectedIndex]?.text;
   const obs = document.getElementById("observaciones").value;
 
-  if (!caminante) return alert("Seleccione caminante");
-  if (!zona) return alert("Seleccione zona");
-  if (!psr) return alert("Seleccione PSR");
+  if (!caminante) return mostrarError();
+  if (!zona) return mostrarError();
+  if (!psrSelect.value) return mostrarError();
 
   const payload = {
     Supervisor: supervisor,
@@ -309,20 +319,18 @@ function enviarAuditoria() {
     if (res.includes("OK")) {
       document.getElementById("modal").style.display = "flex";
     } else {
-      alert("Error: " + res);
+      mostrarError();
     }
   })
-  .catch(() => alert("Error de conexión ❌"));
+  .catch(() => mostrarError());
 }
 
-/* VISUAL */
 function actualizarVisual(id) {
   const el = document.getElementById(id);
   if (el.value) el.classList.add("has-value");
   else el.classList.remove("has-value");
 }
 
-/* LIMPIAR */
 function limpiarFormulario() {
   ["caminanteSelect", "zonaSelect", "psrSelect"].forEach(id => {
     const el = document.getElementById(id);
@@ -332,13 +340,11 @@ function limpiarFormulario() {
   document.getElementById("observaciones").value = "";
 }
 
-/* MODAL */
 function cerrarModal() {
   document.getElementById("modal").style.display = "none";
   window.location.href = "index.html";
 }
 
-/* VOLVER */
 function volverMenu() {
   window.location.href = "index.html";
 }
