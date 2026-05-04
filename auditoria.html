@@ -90,7 +90,7 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
 
 <div class="box">
 
-<h2 id="titulo">Auditoría</h2>
+<h2 id="titulo"></h2>
 
 <label>Supervisor</label>
 <input id="supervisorInput" class="form-control mb-2" readonly>
@@ -192,42 +192,62 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
   </div>
 </div>
 
-<!-- 🔥 NUEVO BLOQUE -->
 <div id="bloqueRecargas">
 
   <label>Canal recargas</label>
-  <input id="canalRecargas" class="form-control mb-2"
-         placeholder="Telerecargas, Pago Fácil...">
+  <input id="canalRecargas"
+         class="form-control mb-2"
+         placeholder="Telerecargas, Pago Fácil, Rapipago, PIN Web, etc.">
 
   <label>Comisión mayorista</label>
-  <input id="comisionMayorista" type="number" class="form-control mb-2">
+  <input id="comisionMayorista"
+         type="number"
+         class="form-control mb-2">
 
-  <label>Costo fijo por uso de multimarca</label>
-  <input id="costoFijo" type="number" class="form-control mb-2">
+  <div class="row-flex">
 
-  <label>Monto adicional</label>
-  <input id="montoAdicional" type="number" class="form-control mb-2">
+    <div class="col-flex">
+      <label>Costo fijo por uso de multimarca</label>
+      <input id="costoFijo"
+             type="number"
+             class="form-control mb-2">
+    </div>
+
+    <div class="col-flex">
+      <label>Monto adicional</label>
+
+      <input id="montoAdicional"
+             type="number"
+             class="form-control mb-1">
+
+      <small style="color:#aaa; font-size:12px;">
+        Este ítem es el adicional que cobran a los clientes los PSRs. Si no cobran adicional colocan 0.
+      </small>
+
+    </div>
+
+  </div>
 
 </div>
 
-<label>Observaciones</label>
+<label>Observaciones / Puntos a mejorar</label>
 <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
 
 <label>Adjuntar fotos</label>
-<input type="file" id="fotos" class="form-control mb-2" multiple>
+<input type="file" id="fotos" class="form-control mb-2" multiple accept="image/*">
 
 <button class="btn btn-main" onclick="enviarAuditoria()">Enviar Auditoría</button>
 
 <div class="btn-row">
   <button class="btn btn-menu" onclick="volverMenu()">Menú</button>
-  <button class="btn btn-clear" onclick="location.reload()">Borrar</button>
+  <button class="btn btn-clear" onclick="location.reload()">Borrar formulario</button>
 </div>
 
 </div>
 
 <script>
 
-const URL = "PEGAR_TU_WEBAPP_URL";
+const URL = "https://script.google.com/macros/s/AKfycbzCcV3m9s3Q--icGcvDo6kh6GH4EVgOsSBn6iKkUwlKhr-NGA_A8tHo2_FbcmBSQw/exec";
 const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
 const JSON_PSR = "psragencia.json";
 
@@ -236,7 +256,7 @@ const supervisor = params.get("supervisor") || "";
 const categoria = params.get("categoria") || "Auditoria";
 
 document.getElementById("titulo").textContent =
-  "Auditoría - " + supervisor + " - " + categoria;
+  categoria + " - " + supervisor;
 
 document.getElementById("supervisorInput").value = supervisor;
 
@@ -250,6 +270,14 @@ const bloque3 = document.getElementById("bloque3");
 const bloqueMulti = document.getElementById("bloqueMulti");
 const bloqueRecargas = document.getElementById("bloqueRecargas");
 
+function pintarSelect(select){
+  if(select.value){
+    select.classList.add("selected-red");
+  } else {
+    select.classList.remove("selected-red");
+  }
+}
+
 fetch(API_CAMINANTES)
 .then(r=>r.json())
 .then(data=>{
@@ -258,6 +286,10 @@ fetch(API_CAMINANTES)
       caminanteSelect.innerHTML += `<option>${c}</option>`;
     });
   }
+});
+
+document.querySelectorAll("select").forEach(select => {
+  select.addEventListener("change", () => pintarSelect(select));
 });
 
 caminanteSelect.onchange = function(){
@@ -298,16 +330,18 @@ referidos.onchange = sim.onchange = ()=> {
   if(referidos.value && sim.value) bloqueMulti.style.display="block";
 };
 
-/* MULTIMARCA LOGIC */
+/* ✅ CORREGIDO */
 document.querySelectorAll('input[name="stockMulti"]').forEach(r=>{
   r.addEventListener("change", function(){
+
     if(this.value === "Si"){
-      bloqueRecargas.style.display="block";
-      observaciones.disabled = true;
+      bloqueRecargas.style.display = "block";
+      observaciones.disabled = false;
     } else {
-      bloqueRecargas.style.display="none";
+      bloqueRecargas.style.display = "none";
       observaciones.disabled = false;
     }
+
   });
 });
 
@@ -315,8 +349,20 @@ async function enviarAuditoria(){
 
   const stockMulti = document.querySelector('input[name="stockMulti"]:checked');
 
-  if(!caminanteSelect.value || !zonaSelect.value || !psrSelect.value){
-    alert("Completar campos base");
+  // 🔴 VALIDACIÓN HASTA STOCK MULTIMARCA
+  if(
+    !caminanteSelect.value ||
+    !zonaSelect.value ||
+    !psrSelect.value ||
+    !materialPOP.value ||
+    !stockLotes.value ||
+    !claroPay.value ||
+    !claroComercios.value ||
+    !referidos.value ||
+    !sim.value ||
+    !stockMulti
+  ){
+    alert("❌ Debes completar todos los campos");
     return;
   }
 
@@ -339,7 +385,7 @@ async function enviarAuditoria(){
     claroComercios: claroComercios.value,
     referidos: referidos.value,
     sim: sim.value,
-    stockMulti: stockMulti ? stockMulti.value : "",
+    stockMulti: stockMulti.value,
     canalRecargas: canalRecargas.value,
     comisionMayorista: comisionMayorista.value,
     costoFijo: costoFijo.value,
@@ -349,11 +395,14 @@ async function enviarAuditoria(){
   };
 
   fetch(URL,{method:"POST", body:JSON.stringify(data)})
-  .then(()=>{ alert("Enviado"); location.reload(); });
+  .then(()=> {
+    alert("Enviado");
+    window.location.href = "index.html";
+  });
 }
 
 function toBase64(file){
-  return new Promise((res,rej)=>{
+  return new Promise(res=>{
     const r=new FileReader();
     r.onload=()=>res(r.result);
     r.readAsDataURL(file);
