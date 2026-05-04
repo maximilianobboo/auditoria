@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
 
-  <!-- MOBILE -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <title>Clausurados</title>
@@ -40,7 +39,6 @@
       font-weight: bold;
       font-size: 14px;
       margin-bottom: 15px;
-
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -59,6 +57,31 @@
       border: 1px solid #444;
       border-radius: 8px;
       padding: 10px;
+    }
+
+    /* 🔴 SELECT VISUAL ROJO GLOBAL */
+    .form-select {
+      background-color: #222;
+      color: white;
+      transition: all 0.2s ease;
+    }
+
+    .form-select option {
+      background-color: #111;
+      color: white;
+    }
+
+    .form-select:focus {
+      border-color: #d32f2f;
+      box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
+    }
+
+    /* cuando hay selección */
+    .form-select.has-value {
+      background-color: #d32f2f !important;
+      color: #fff !important;
+      font-weight: bold;
+      border-color: #d32f2f !important;
     }
 
     .btn-main {
@@ -164,13 +187,8 @@
   </button>
 
   <div class="btn-row">
-    <button class="btn btn-menu" onclick="volverMenu()">
-      Menú
-    </button>
-
-    <button class="btn btn-clear" onclick="limpiarFormulario()">
-      Borrar formulario
-    </button>
+    <button class="btn btn-menu" onclick="volverMenu()">Menú</button>
+    <button class="btn btn-clear" onclick="limpiarFormulario()">Borrar formulario</button>
   </div>
 
 </div>
@@ -196,7 +214,7 @@ const supervisor = params.get("supervisor") || "";
 document.getElementById("titulo").textContent = "Clausurados - " + supervisor;
 document.getElementById("supervisorInput").value = supervisor;
 
-// CAMINANTES
+/* CAMINANTES */
 fetch(API_CAMINANTES)
   .then(r => r.json())
   .then(data => {
@@ -209,8 +227,10 @@ fetch(API_CAMINANTES)
     });
   });
 
-// ZONAS
+/* ZONAS */
 document.getElementById("caminanteSelect").addEventListener("change", function () {
+  actualizarVisual("caminanteSelect");
+
   fetch(JSON_PSR)
     .then(r => r.json())
     .then(data => {
@@ -230,8 +250,10 @@ document.getElementById("caminanteSelect").addEventListener("change", function (
     });
 });
 
-// PSR
+/* PSR */
 document.getElementById("zonaSelect").addEventListener("change", function () {
+  actualizarVisual("zonaSelect");
+
   fetch(JSON_PSR)
     .then(r => r.json())
     .then(data => {
@@ -249,7 +271,12 @@ document.getElementById("zonaSelect").addEventListener("change", function () {
     });
 });
 
-// ENVIAR
+/* 🔴 IMPORTANTE: también aplica visual al PSR */
+document.getElementById("psrSelect").addEventListener("change", function () {
+  actualizarVisual("psrSelect");
+});
+
+/* ENVÍO */
 function enviarAuditoria() {
 
   const caminante = document.getElementById("caminanteSelect").value;
@@ -288,21 +315,30 @@ function enviarAuditoria() {
   .catch(() => alert("Error de conexión ❌"));
 }
 
-// MODAL
+/* VISUAL */
+function actualizarVisual(id) {
+  const el = document.getElementById(id);
+  if (el.value) el.classList.add("has-value");
+  else el.classList.remove("has-value");
+}
+
+/* LIMPIAR */
+function limpiarFormulario() {
+  ["caminanteSelect", "zonaSelect", "psrSelect"].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = "";
+    el.classList.remove("has-value");
+  });
+  document.getElementById("observaciones").value = "";
+}
+
+/* MODAL */
 function cerrarModal() {
   document.getElementById("modal").style.display = "none";
   window.location.href = "index.html";
 }
 
-// LIMPIAR
-function limpiarFormulario() {
-  document.getElementById("caminanteSelect").value = "";
-  document.getElementById("zonaSelect").innerHTML = '<option value="">Seleccione zona</option>';
-  document.getElementById("psrSelect").innerHTML = '<option value="">Seleccione PSR</option>';
-  document.getElementById("observaciones").value = "";
-}
-
-// VOLVER
+/* VOLVER */
 function volverMenu() {
   window.location.href = "index.html";
 }
