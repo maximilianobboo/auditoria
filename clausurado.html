@@ -173,6 +173,10 @@
   <label>Observaciones</label>
   <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
 
+  <!-- 📸 FOTOS -->
+  <label>Fotos</label>
+  <input type="file" id="fotos" class="form-control mb-2" multiple accept="image/*" capture="environment">
+
   <button class="btn btn-main" onclick="enviarAuditoria()">
     Enviar Auditoría
   </button>
@@ -193,7 +197,7 @@
   </div>
 </div>
 
-<!-- MODAL ERROR BOOTSTRAP -->
+<!-- MODAL ERROR -->
 <div class="modal fade" id="modalError" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
@@ -281,14 +285,23 @@ document.getElementById("psrSelect").addEventListener("change", function () {
   actualizarVisual("psrSelect");
 });
 
-/* ERROR MODAL */
+/* FUNCION BASE64 */
+function toBase64(file){
+  return new Promise((resolve)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+/* ERROR */
 function mostrarError() {
   const modal = new bootstrap.Modal(document.getElementById("modalError"));
   modal.show();
 }
 
 /* ENVÍO */
-function enviarAuditoria() {
+async function enviarAuditoria() {
 
   const caminante = document.getElementById("caminanteSelect").value;
   const zona = document.getElementById("zonaSelect").value;
@@ -301,13 +314,21 @@ function enviarAuditoria() {
   if (!zona) return mostrarError();
   if (!psrSelect.value) return mostrarError();
 
+  let fotos = [];
+  const files = document.getElementById("fotos").files;
+
+  for (let f of files) {
+    fotos.push(await toBase64(f));
+  }
+
   const payload = {
     Supervisor: supervisor,
     Categoria: "Clausurados",
     Caminante: caminante,
     Zona: zona,
     PSR: psr,
-    Observaciones: obs
+    Observaciones: obs,
+    Fotos: fotos.join(", ")
   };
 
   fetch(URL, {
@@ -338,6 +359,7 @@ function limpiarFormulario() {
     el.classList.remove("has-value");
   });
   document.getElementById("observaciones").value = "";
+  document.getElementById("fotos").value = "";
 }
 
 function cerrarModal() {
