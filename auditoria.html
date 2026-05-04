@@ -2,25 +2,49 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+
 <title>Auditoría</title>
 
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+<link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+<!-- 📱 MODO APP MOBILE -->
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <style>
+
+html, body {
+  height: 100%;
+}
+
 body {
   background: black;
   color: white;
   font-family: Arial;
-  padding: 20px;
+
+  margin: 0;
+  padding: 0;
+
+  width: 100vw;
+  min-height: 100vh;
+
+  overflow-x: hidden;
 }
 
 .box {
+  width: 100%;
   max-width: 520px;
-  margin: auto;
+  margin: 0 auto;
+
+  min-height: 100vh;
+
   background: #111;
-  padding: 25px;
-  border-radius: 12px;
+  padding: 20px 15px 40px;
+
+  border-radius: 0;
 }
 
 #titulo {
@@ -33,12 +57,21 @@ body {
   font-size: 14px;
 }
 
-label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
+label {
+  margin-top:10px;
+  margin-bottom:5px;
+  color:#ccc;
+  font-size:14px;
+}
 
 .form-control, .form-select {
   background:#222;
   color:white;
   border:1px solid #444;
+}
+
+input, select, textarea, button {
+  font-size: 16px;
 }
 
 .selected-red {
@@ -55,16 +88,38 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
   border:none;
 }
 
-.btn-row { display:flex; gap:10px; margin-top:10px; }
+.btn-row {
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
 
-.btn-menu { background:#333; color:#ccc; flex:1; border:1px solid #555; }
+.btn-menu {
+  background:#333;
+  color:#ccc;
+  flex:1;
+  border:1px solid #555;
+}
 
-.btn-clear { background:#2e7d32; color:white; flex:1; border:none; }
+.btn-clear {
+  background:#2e7d32;
+  color:white;
+  flex:1;
+  border:none;
+}
 
-.row-flex { display:flex; gap:10px; }
-.col-flex { flex:1; }
+.row-flex {
+  display:flex;
+  gap:10px;
+}
 
-#bloque1,#bloque2,#bloque3,#bloqueMulti,#bloqueRecargas { display:none; }
+.col-flex {
+  flex:1;
+}
+
+#bloque1,#bloque2,#bloque3,#bloqueMulti,#bloqueRecargas {
+  display:none;
+}
 
 .stock-row{
   display:flex;
@@ -83,6 +138,7 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
   transform:scale(1.4);
   accent-color:#d32f2f;
 }
+
 </style>
 </head>
 
@@ -122,7 +178,7 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
     <select id="materialPOP" class="form-select">
       <option value="">Seleccione</option>
       <option>Correcto</option>
-      <option>Quemado</option>
+      <option>Quemado/Deteriorado</option>
       <option>Sin material</option>
     </select>
   </div>
@@ -133,6 +189,7 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
       <option value="">Seleccione</option>
       <option>Correcto</option>
       <option>Incompleto</option>
+      <option>Vencido/Proximo a vencer</option>
       <option>Sin stock</option>
     </select>
   </div>
@@ -143,8 +200,9 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
     <label>Claro Pay</label>
     <select id="claroPay" class="form-select">
       <option value="">Seleccione</option>
-      <option>Si</option>
-      <option>No</option>
+      <option>Si tiene, sabe beneficio 8%</option>
+      <option>No sabe</option>
+      <option>No tiene, no le interesa</option>
     </select>
   </div>
 
@@ -152,8 +210,9 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
     <label>Claro Comercios</label>
     <select id="claroComercios" class="form-select">
       <option value="">Seleccione</option>
-      <option>Si</option>
-      <option>No</option>
+      <option>Conoce</option>
+      <option>No utiliza/Bloqueado</option>
+      <option>No tiene, desconoce</option>
     </select>
   </div>
 </div>
@@ -169,10 +228,11 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
   </div>
 
   <div class="col-flex">
-    <label>SIM</label>
+    <label>SIM Distribuida</label>
     <select id="sim" class="form-select">
       <option value="">Seleccione</option>
       <option>Posee</option>
+      <option>Vencida/Proxima a vencer</option>
       <option>No posee</option>
     </select>
   </div>
@@ -195,37 +255,24 @@ label { margin-top:10px; margin-bottom:5px; color:#ccc; font-size:14px; }
 <div id="bloqueRecargas">
 
   <label>Canal recargas</label>
-  <input id="canalRecargas"
-         class="form-control mb-2"
-         placeholder="Telerecargas, Pago Fácil, Rapipago, PIN Web, etc.">
+  <input id="canalRecargas" class="form-control mb-2">
 
   <label>Comisión mayorista</label>
-  <input id="comisionMayorista"
-         type="number"
-         class="form-control mb-2">
+  <input id="comisionMayorista" type="number" class="form-control mb-2">
 
   <div class="row-flex">
-
     <div class="col-flex">
       <label>Costo fijo por uso de multimarca</label>
-      <input id="costoFijo"
-             type="number"
-             class="form-control mb-2">
+      <input id="costoFijo" type="number" class="form-control mb-2">
     </div>
 
     <div class="col-flex">
       <label>Monto adicional</label>
-
-      <input id="montoAdicional"
-             type="number"
-             class="form-control mb-1">
-
+      <input id="montoAdicional" type="number" class="form-control mb-1">
       <small style="color:#aaa; font-size:12px;">
-        Este ítem es el adicional que cobran a los clientes los PSRs. Si no cobran adicional colocan 0.
+        Si no cobran adicional colocar 0
       </small>
-
     </div>
-
   </div>
 
 </div>
@@ -255,9 +302,7 @@ const params = new URLSearchParams(window.location.search);
 const supervisor = params.get("supervisor") || "";
 const categoria = params.get("categoria") || "Auditoria";
 
-document.getElementById("titulo").textContent =
-  categoria + " - " + supervisor;
-
+document.getElementById("titulo").textContent = categoria + " - " + supervisor;
 document.getElementById("supervisorInput").value = supervisor;
 
 const caminanteSelect = document.getElementById("caminanteSelect");
@@ -271,11 +316,7 @@ const bloqueMulti = document.getElementById("bloqueMulti");
 const bloqueRecargas = document.getElementById("bloqueRecargas");
 
 function pintarSelect(select){
-  if(select.value){
-    select.classList.add("selected-red");
-  } else {
-    select.classList.remove("selected-red");
-  }
+  select.classList.toggle("selected-red", select.value !== "");
 }
 
 fetch(API_CAMINANTES)
@@ -288,8 +329,8 @@ fetch(API_CAMINANTES)
   }
 });
 
-document.querySelectorAll("select").forEach(select => {
-  select.addEventListener("change", () => pintarSelect(select));
+document.querySelectorAll("select").forEach(s=>{
+  s.addEventListener("change", ()=>pintarSelect(s));
 });
 
 caminanteSelect.onchange = function(){
@@ -318,58 +359,30 @@ zonaSelect.onchange = function(){
 
 psrSelect.onchange = ()=> bloque1.style.display="flex";
 
-materialPOP.onchange = stockLotes.onchange = ()=> {
+materialPOP.onchange = stockLotes.onchange = ()=>{
   if(materialPOP.value && stockLotes.value) bloque2.style.display="flex";
 };
 
-claroPay.onchange = claroComercios.onchange = ()=> {
+claroPay.onchange = claroComercios.onchange = ()=>{
   if(claroPay.value && claroComercios.value) bloque3.style.display="flex";
 };
 
-referidos.onchange = sim.onchange = ()=> {
+referidos.onchange = sim.onchange = ()=>{
   if(referidos.value && sim.value) bloqueMulti.style.display="block";
 };
 
-/* ✅ CORREGIDO */
 document.querySelectorAll('input[name="stockMulti"]').forEach(r=>{
   r.addEventListener("change", function(){
-
-    if(this.value === "Si"){
-      bloqueRecargas.style.display = "block";
-      observaciones.disabled = false;
-    } else {
-      bloqueRecargas.style.display = "none";
-      observaciones.disabled = false;
-    }
-
+    bloqueRecargas.style.display = this.value === "Si" ? "block" : "none";
   });
 });
 
 async function enviarAuditoria(){
-
   const stockMulti = document.querySelector('input[name="stockMulti"]:checked');
+  if(!stockMulti){ alert("Completar campos"); return; }
 
-  // 🔴 VALIDACIÓN HASTA STOCK MULTIMARCA
-  if(
-    !caminanteSelect.value ||
-    !zonaSelect.value ||
-    !psrSelect.value ||
-    !materialPOP.value ||
-    !stockLotes.value ||
-    !claroPay.value ||
-    !claroComercios.value ||
-    !referidos.value ||
-    !sim.value ||
-    !stockMulti
-  ){
-    alert("❌ Debes completar todos los campos");
-    return;
-  }
-
-  const files = document.getElementById("fotos").files;
-  let fotos = [];
-
-  for(let f of files){
+  let fotos=[];
+  for(let f of document.getElementById("fotos").files){
     fotos.push(await toBase64(f));
   }
 
@@ -394,18 +407,15 @@ async function enviarAuditoria(){
     fotos: fotos.join(", ")
   };
 
-  fetch(URL,{method:"POST", body:JSON.stringify(data)})
-  .then(()=> {
-    alert("Enviado");
-    window.location.href = "index.html";
-  });
+  fetch(URL,{method:"POST",body:JSON.stringify(data)})
+  .then(()=>window.location.href="index.html");
 }
 
 function toBase64(file){
-  return new Promise(res=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result);
-    r.readAsDataURL(file);
+  return new Promise(r=>{
+    let fr=new FileReader();
+    fr.onload=()=>r(fr.result);
+    fr.readAsDataURL(file);
   });
 }
 
