@@ -39,14 +39,10 @@
       font-weight: bold;
       font-size: 14px;
       margin-bottom: 15px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     label {
       margin-top: 12px;
-      margin-bottom: 5px;
       color: #ccc;
       font-size: 14px;
     }
@@ -59,16 +55,7 @@
       padding: 10px;
     }
 
-    .form-select option {
-      background-color: #111;
-      color: white;
-    }
-
-    .form-select:focus {
-      border-color: #d32f2f;
-      box-shadow: 0 0 0 0.2rem rgba(211, 47, 47, 0.25);
-    }
-
+    /* 🔴 DROPDOWNS EN ROJO (ORIGINAL RESTAURADO) */
     .form-select.has-value {
       background-color: #d32f2f !important;
       color: #fff !important;
@@ -83,7 +70,6 @@
       margin-top: 18px;
       border: none;
       padding: 14px;
-      font-size: 16px;
       border-radius: 10px;
     }
 
@@ -97,56 +83,66 @@
       background: #333;
       color: #ccc;
       flex: 1;
-      border: 1px solid #555;
-      padding: 12px;
       border-radius: 10px;
+      padding: 12px;
     }
 
     .btn-clear {
       background: #2e7d32;
       color: white;
       flex: 1;
-      border: none;
-      padding: 12px;
       border-radius: 10px;
+      padding: 12px;
+      border: none;
     }
 
-    .modal-overlay {
+    /* ================= LOADER ORIGINAL ================= */
+    #loader {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.8);
+      inset: 0;
+      background: black;
       display: none;
       justify-content: center;
       align-items: center;
       z-index: 9999;
     }
 
-    .modal-box {
-      background: #1c1c1c;
-      padding: 25px;
-      border-radius: 12px;
-      text-align: center;
-      width: 85%;
-      max-width: 320px;
-      box-shadow: 0 0 20px rgba(255,0,0,0.3);
+    .logo-loader {
+      position: relative;
+      width: 140px;
+      height: 140px;
     }
 
-    .btn-ok {
-      background: #4caf50;
-      color: white;
-      border: none;
+    .logo-base {
       width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      border-radius: 10px;
+      filter: grayscale(100%) brightness(0.5);
+    }
+
+    .logo-fill {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      clip-path: inset(100% 0 0 0);
+      animation: llenar 2s cubic-bezier(0.65,0,0.35,1) infinite;
+    }
+
+    @keyframes llenar {
+      0% { clip-path: inset(100% 0 0 0); }
+      50% { clip-path: inset(0% 0 0 0); }
+      100% { clip-path: inset(100% 0 0 0); }
     }
   </style>
 </head>
 
 <body>
+
+<!-- LOADER ORIGINAL -->
+<div id="loader">
+  <div class="logo-loader">
+    <img class="logo-base" src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png">
+    <img class="logo-fill" src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png">
+  </div>
+</div>
 
 <div class="container-app">
 
@@ -173,40 +169,41 @@
   <label>Observaciones</label>
   <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
 
-  <!-- 📸 FOTOS -->
   <label>Fotos</label>
   <input type="file" id="fotos" class="form-control mb-2" multiple accept="image/*" capture="environment">
 
-  <button class="btn btn-main" onclick="enviarAuditoria()">
-    Enviar Auditoría
-  </button>
+  <button class="btn btn-main" onclick="enviarAuditoria()">Enviar Auditoría</button>
 
   <div class="btn-row">
     <button class="btn btn-menu" onclick="volverMenu()">Menú</button>
-    <button class="btn btn-clear" onclick="limpiarFormulario()">Borrar formulario</button>
+    <button class="btn btn-clear" onclick="limpiarFormulario()">Borrar</button>
   </div>
 
 </div>
 
-<!-- MODAL ÉXITO -->
-<div id="modal" class="modal-overlay">
-  <div class="modal-box">
-    <h3>✔ Auditoría enviada</h3>
-    <p>El registro fue guardado correctamente.</p>
-    <button class="btn-ok" onclick="cerrarModal()">OK</button>
+<!-- MODAL OK -->
+<div class="modal fade" id="modalOk" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark text-white text-center">
+      <div class="modal-header border-0">
+        <h5>✔ Auditoría enviada</h5>
+      </div>
+      <div class="modal-body">Registro guardado correctamente</div>
+      <div class="modal-footer border-0">
+        <button class="btn btn-success w-100" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <!-- MODAL ERROR -->
 <div class="modal fade" id="modalError" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content bg-dark text-white">
+    <div class="modal-content bg-dark text-white text-center">
       <div class="modal-header border-0">
-        <h5>⚠ Atención</h5>
+        <h5>⚠ Error</h5>
       </div>
-      <div class="modal-body text-center">
-        Complete los campos faltantes
-      </div>
+      <div class="modal-body">Complete los campos obligatorios</div>
       <div class="modal-footer border-0">
         <button class="btn btn-danger w-100" data-bs-dismiss="modal">OK</button>
       </div>
@@ -218,17 +215,35 @@
 
 <script>
 
+/* ================= URLS ================= */
 const URL = "https://script.google.com/macros/s/AKfycbwWG6yBeWRJIQhw8hbDcL-vty_EqTju2xD5xJOinWTDF6O7KBpiAD-FlTAvdlhx-2MnmQ/exec";
 const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
 const JSON_PSR = "psragencia.json";
 
+/* ================= SUPERVISOR ================= */
 const params = new URLSearchParams(window.location.search);
 const supervisor = params.get("supervisor") || "";
 
-document.getElementById("titulo").textContent = "Clausurados - " + supervisor;
 document.getElementById("supervisorInput").value = supervisor;
+document.getElementById("titulo").textContent = "Clausurados - " + supervisor;
 
-/* CAMINANTES */
+/* ================= LOADER ================= */
+function mostrarLoader() {
+  document.getElementById("loader").style.display = "flex";
+}
+
+function ocultarLoader() {
+  document.getElementById("loader").style.display = "none";
+}
+
+/* ================= DROPDOWN ROJO ================= */
+function actualizarVisual(id) {
+  const el = document.getElementById(id);
+  if (el.value) el.classList.add("has-value");
+  else el.classList.remove("has-value");
+}
+
+/* ================= CAMINANTES ================= */
 fetch(API_CAMINANTES)
   .then(r => r.json())
   .then(data => {
@@ -285,86 +300,82 @@ document.getElementById("psrSelect").addEventListener("change", function () {
   actualizarVisual("psrSelect");
 });
 
-/* FUNCION BASE64 */
-function toBase64(file){
-  return new Promise((resolve)=>{
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.readAsDataURL(file);
-  });
-}
-
-/* ERROR */
-function mostrarError() {
-  const modal = new bootstrap.Modal(document.getElementById("modalError"));
-  modal.show();
-}
-
-/* ENVÍO */
+/* ================= ENVÍO ================= */
 async function enviarAuditoria() {
 
   const caminante = document.getElementById("caminanteSelect").value;
   const zona = document.getElementById("zonaSelect").value;
   const psrSelect = document.getElementById("psrSelect");
 
-  const psr = psrSelect.options[psrSelect.selectedIndex]?.text;
-  const obs = document.getElementById("observaciones").value;
-
-  if (!caminante) return mostrarError();
-  if (!zona) return mostrarError();
-  if (!psrSelect.value) return mostrarError();
-
-  let fotos = [];
-  const files = document.getElementById("fotos").files;
-
-  for (let f of files) {
-    fotos.push(await toBase64(f));
+  if (!caminante || !zona || !psrSelect.value) {
+    new bootstrap.Modal(document.getElementById("modalError")).show();
+    return;
   }
 
-  const payload = {
-    Supervisor: supervisor,
-    Categoria: "Clausurados",
-    Caminante: caminante,
-    Zona: zona,
-    PSR: psr,
-    Observaciones: obs,
-    Fotos: fotos.join(", ")
-  };
+  mostrarLoader();
 
-  fetch(URL, {
-    method: "POST",
-    body: JSON.stringify(payload)
-  })
-  .then(r => r.text())
-  .then(res => {
-    if (res.includes("OK")) {
-      document.getElementById("modal").style.display = "flex";
-    } else {
-      mostrarError();
+  try {
+
+    let fotos = [];
+    const files = document.getElementById("fotos").files;
+
+    for (let f of files) {
+      const base64 = await new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(f);
+      });
+      fotos.push(base64);
     }
-  })
-  .catch(() => mostrarError());
+
+    const payload = {
+      Supervisor: supervisor,
+      Categoria: "Clausurados",
+      Caminante: caminante,
+      Zona: zona,
+      PSR: psrSelect.options[psrSelect.selectedIndex].text,
+      Observaciones: document.getElementById("observaciones").value,
+      Fotos: fotos.join(", ")
+    };
+
+    const res = await fetch(URL, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    const text = await res.text();
+
+    ocultarLoader();
+
+    if (text.includes("OK")) {
+      const modal = new bootstrap.Modal(document.getElementById("modalOk"));
+
+      document.getElementById("modalOk").addEventListener("hidden.bs.modal", () => {
+        window.location.href = "index.html";
+      }, { once: true });
+
+      modal.show();
+
+    } else {
+      new bootstrap.Modal(document.getElementById("modalError")).show();
+    }
+
+  } catch (e) {
+    ocultarLoader();
+    new bootstrap.Modal(document.getElementById("modalError")).show();
+  }
 }
 
-function actualizarVisual(id) {
-  const el = document.getElementById(id);
-  if (el.value) el.classList.add("has-value");
-  else el.classList.remove("has-value");
-}
-
+/* ================= UTIL ================= */
 function limpiarFormulario() {
-  ["caminanteSelect", "zonaSelect", "psrSelect"].forEach(id => {
+  ["caminanteSelect","zonaSelect","psrSelect"].forEach(id => {
     const el = document.getElementById(id);
     el.value = "";
     el.classList.remove("has-value");
   });
+
   document.getElementById("observaciones").value = "";
   document.getElementById("fotos").value = "";
-}
-
-function cerrarModal() {
-  document.getElementById("modal").style.display = "none";
-  window.location.href = "index.html";
 }
 
 function volverMenu() {
