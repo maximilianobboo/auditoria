@@ -139,11 +139,54 @@ input, select, textarea, button {
   accent-color:#d32f2f;
 }
 
+
+#globalLoader {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+
+.loader-box {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.loader-base {
+  width: 100%;
+  filter: grayscale(100%) brightness(0.5);
+}
+
+.loader-fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  clip-path: inset(100% 0 0 0);
+  animation: loaderFill 1.8s ease-in-out infinite;
+}
+
+@keyframes loaderFill {
+  0% { clip-path: inset(100% 0 0 0); }
+  50% { clip-path: inset(0% 0 0 0); }
+  100% { clip-path: inset(100% 0 0 0); }
+}
+
+
 </style>
 </head>
 
 <body>
-
+<!-- LOADER GLOBAL -->
+<div id="globalLoader">
+  <div class="loader-box">
+    <img src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png" class="loader-base">
+    <img src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png" class="loader-fill">
+  </div>
+</div>
 <div class="box">
 
 <h2 id="titulo"></h2>
@@ -339,6 +382,15 @@ const categoria = params.get("categoria") || "Auditoria";
 document.getElementById("titulo").textContent = categoria + " - " + supervisor;
 document.getElementById("supervisorInput").value = supervisor;
 
+// FUNCIONES LOADER
+function showLoader(){
+  document.getElementById("globalLoader").style.display = "flex";
+}
+
+function hideLoader(){
+  document.getElementById("globalLoader").style.display = "none";
+}
+
 const caminanteSelect = document.getElementById("caminanteSelect");
 const zonaSelect = document.getElementById("zonaSelect");
 const psrSelect = document.getElementById("psrSelect");
@@ -407,6 +459,8 @@ document.querySelectorAll('input[name="stockMulti"]').forEach(r=>{
 
 async function enviarAuditoria(){
 
+  showLoader(); // 👈 AGREGADO
+
   const stockMulti=document.querySelector('input[name="stockMulti"]:checked');
 
   if(
@@ -421,6 +475,7 @@ async function enviarAuditoria(){
     !sim.value||
     !stockMulti
   ){
+    hideLoader(); // 👈 AGREGADO
     new bootstrap.Modal(document.getElementById('modalError')).show();
     return;
   }
@@ -451,10 +506,14 @@ async function enviarAuditoria(){
   };
 
   fetch(URL,{method:"POST",body:JSON.stringify(data)})
-  .then(()=>{
-    new bootstrap.Modal(document.getElementById('modalExito')).show();
-    setTimeout(()=>window.location.href="index.html",1500);
-  });
+.then(()=>{
+  hideLoader(); // 👈 AGREGADO
+  new bootstrap.Modal(document.getElementById('modalExito')).show();
+  setTimeout(()=>window.location.href="index.html",1500);
+})
+.catch(()=>{
+  hideLoader(); // 👈 AGREGADO
+});
 }
 
 function toBase64(f){
