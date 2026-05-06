@@ -406,14 +406,26 @@ function pintarSelect(s){
   s.classList.toggle("selected-red", s.value!=="");
 }
 
+showLoader();
+
 fetch(API_CAMINANTES)
-.then(r=>r.json())
-.then(data=>{
-  if(data[supervisor]){
-    data[supervisor].forEach(c=>{
+.then(r => r.json())
+.then(data => {
+
+  caminanteSelect.innerHTML = `<option value="">Seleccione</option>`;
+
+  if (data[supervisor]) {
+    data[supervisor].forEach(c => {
       caminanteSelect.innerHTML += `<option>${c}</option>`;
     });
   }
+
+})
+.catch(err => {
+  console.error("Error cargando caminantes:", err);
+})
+.finally(() => {
+  hideLoader();
 });
 
 document.querySelectorAll("select").forEach(s=>{

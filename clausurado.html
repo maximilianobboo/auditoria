@@ -245,16 +245,25 @@ function actualizarVisual(id) {
 }
 
 /* ================= CAMINANTES ================= */
+mostrarLoader();
+
 fetch(API_CAMINANTES)
   .then(r => r.json())
   .then(data => {
     const select = document.getElementById("caminanteSelect");
+
     (data[supervisor] || []).forEach(c => {
       const opt = document.createElement("option");
       opt.value = c;
       opt.textContent = c;
       select.appendChild(opt);
     });
+  })
+  .catch(() => {
+    new bootstrap.Modal(document.getElementById("modalError")).show();
+  })
+  .finally(() => {
+    ocultarLoader();
   });
 
 document.getElementById("caminanteSelect").addEventListener("change", function () {
@@ -336,7 +345,7 @@ async function enviarAuditoria() {
       Zona: zona,
       PSR: psrSelect.options[psrSelect.selectedIndex].text,
       Observaciones: document.getElementById("observaciones").value,
-      Fotos: fotos.join(", ")
+      Fotos: fotos.join("|||")
     };
 
     const res = await fetch(URL, {
