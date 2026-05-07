@@ -361,7 +361,8 @@ input, select, textarea, button {
 
 <script>
 
-const URL = "https://script.google.com/macros/s/AKfycbzCcV3m9s3Q--icGcvDo6kh6GH4EVgOsSBn6iKkUwlKhr-NGA_A8tHo2_FbcmBSQw/exec";
+const URL =  "https://script.google.com/macros/s/AKfycbzrpl4-oltEAYw7544gLHEiczksBoMcEIQXBVwT7KPoD1ImlNVATkR8SKvRubyN1uTJwg/exec";
+/* "https://script.google.com/macros/s/AKfycbzCcV3m9s3Q--icGcvDo6kh6GH4EVgOsSBn6iKkUwlKhr-NGA_A8tHo2_FbcmBSQw/exec"; */
 const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
 const JSON_PSR = "psragencia.json";
 
@@ -507,7 +508,8 @@ async function enviarAuditoria(){
     costoFijo:costoFijo.value,
     montoAdicional:montoAdicional.value,
     observaciones:observaciones.value,
-    fotos:fotos.join(", ")
+    fotos: fotos
+    /*fotos:fotos.join(", ")*/
   };
 
 fetch(URL,{method:"POST",body:JSON.stringify(data)})
