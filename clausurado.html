@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no">
 
   <title>Clausurados</title>
 
-  <link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+  <link rel="icon"
+        type="image/png"
+        href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+
   <meta name="theme-color" content="#000000">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
   <style>
+
     body {
-      background: linear-gradient(180deg, #000000, #1a1a1a);
+      background: linear-gradient(180deg,#000,#1a1a1a);
       color: white;
       margin: 0;
       font-family: Arial;
@@ -47,7 +57,8 @@
       font-size: 14px;
     }
 
-    .form-control, .form-select {
+    .form-control,
+    .form-select {
       background: #222;
       color: white;
       border: 1px solid #444;
@@ -55,7 +66,6 @@
       padding: 10px;
     }
 
-    /* 🔴 DROPDOWNS EN ROJO (ORIGINAL RESTAURADO) */
     .form-select.has-value {
       background-color: #d32f2f !important;
       color: #fff !important;
@@ -96,7 +106,8 @@
       border: none;
     }
 
-    /* ================= LOADER ORIGINAL ================= */
+    /* LOADER */
+
     #loader {
       position: fixed;
       inset: 0;
@@ -127,20 +138,36 @@
     }
 
     @keyframes llenar {
-      0% { clip-path: inset(100% 0 0 0); }
-      50% { clip-path: inset(0% 0 0 0); }
-      100% { clip-path: inset(100% 0 0 0); }
+
+      0% {
+        clip-path: inset(100% 0 0 0);
+      }
+
+      50% {
+        clip-path: inset(0% 0 0 0);
+      }
+
+      100% {
+        clip-path: inset(100% 0 0 0);
+      }
     }
+
   </style>
 </head>
 
 <body>
 
-<!-- LOADER ORIGINAL -->
+<!-- LOADER -->
+
 <div id="loader">
   <div class="logo-loader">
-    <img class="logo-base" src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png">
-    <img class="logo-fill" src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png">
+
+    <img class="logo-base"
+         src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png">
+
+    <img class="logo-fill"
+         src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png">
+
   </div>
 </div>
 
@@ -149,67 +176,158 @@
   <div id="titulo">Clausurados</div>
 
   <label>Supervisor</label>
-  <input id="supervisorInput" class="form-control mb-2" readonly>
+
+  <input id="supervisorInput"
+         class="form-control mb-2"
+         readonly>
 
   <label>Caminante</label>
-  <select id="caminanteSelect" class="form-select mb-2">
+
+  <select id="caminanteSelect"
+          class="form-select mb-2">
+
     <option value="">Seleccione caminante</option>
+
   </select>
 
   <label>Zona</label>
-  <select id="zonaSelect" class="form-select mb-2">
+
+  <select id="zonaSelect"
+          class="form-select mb-2">
+
     <option value="">Seleccione zona</option>
+
   </select>
 
   <label>Código PSR - Nombre PSR</label>
-  <select id="psrSelect" class="form-select mb-2">
+
+  <select id="psrSelect"
+          class="form-select mb-2">
+
     <option value="">Seleccione PSR</option>
+
   </select>
 
   <label>Observaciones</label>
-  <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
+
+  <textarea id="observaciones"
+            class="form-control mb-2"
+            rows="3"></textarea>
 
   <label>Fotos</label>
-  <!-- Elegir fotos de la galeria o tomar foto -->
-  <input type="file" id="fotos" class="form-control mb-2" multiple accept="image/*">
 
-  <button class="btn btn-main" onclick="enviarAuditoria()">Enviar Auditoría</button>
+  <input type="file"
+         id="fotos"
+         class="form-control mb-2"
+         multiple
+         accept="image/*">
+
+  <button class="btn btn-main"
+          onclick="enviarAuditoria()">
+
+    Enviar Auditoría
+
+  </button>
 
   <div class="btn-row">
-    <button class="btn btn-menu" onclick="volverMenu()">Menú</button>
-    <button class="btn btn-clear" onclick="limpiarFormulario()">Borrar formulario</button>
+
+    <button class="btn btn-menu"
+            onclick="volverMenu()">
+
+      Menú
+
+    </button>
+
+    <button class="btn btn-clear"
+            onclick="limpiarFormulario()">
+
+      Borrar formulario
+
+    </button>
+
   </div>
 
 </div>
 
 <!-- MODAL OK -->
-<div class="modal fade" id="modalOk" tabindex="-1">
+
+<div class="modal fade"
+     id="modalOk"
+     tabindex="-1">
+
   <div class="modal-dialog modal-dialog-centered">
+
     <div class="modal-content bg-dark text-white text-center">
+
       <div class="modal-header border-0">
+
         <h5>✔ Auditoría enviada</h5>
+
       </div>
-      <div class="modal-body">Registro guardado correctamente</div>
+
+      <div class="modal-body">
+
+        Registro guardado correctamente
+
+      </div>
+
       <div class="modal-footer border-0">
-        <button class="btn btn-success w-100" data-bs-dismiss="modal">OK</button>
+
+        <button type="button"
+                class="btn btn-success w-100"
+                data-bs-dismiss="modal">
+
+          OK
+
+        </button>
+
       </div>
+
     </div>
+
   </div>
+
 </div>
 
 <!-- MODAL ERROR -->
-<div class="modal fade" id="modalError" tabindex="-1">
+
+<div class="modal fade"
+     id="modalError"
+     tabindex="-1">
+
   <div class="modal-dialog modal-dialog-centered">
+
     <div class="modal-content bg-dark text-white text-center">
+
       <div class="modal-header border-0">
+
         <h5>⚠ Error</h5>
+
       </div>
-      <div class="modal-body">Complete los campos obligatorios</div>
+
+      <div class="modal-body"
+           id="textoError">
+
+        Complete los campos obligatorios
+
+      </div>
+
       <div class="modal-footer border-0">
-        <button class="btn btn-danger w-100" data-bs-dismiss="modal">OK</button>
+
+        <button type="button"
+                class="btn btn-danger w-100"
+                data-bs-dismiss="modal">
+
+          OK
+
+        </button>
+
       </div>
+
     </div>
+
   </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -217,108 +335,272 @@
 <script>
 
 /* ================= URLS ================= */
-const URL = "https://script.google.com/macros/s/AKfycbwWG6yBeWRJIQhw8hbDcL-vty_EqTju2xD5xJOinWTDF6O7KBpiAD-FlTAvdlhx-2MnmQ/exec";
-const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
+
+const URL = "https://script.google.com/macros/s/AKfycbyhKwpJnlXsivZ4pZ0FQa3-tKdkYJyKK4s2aGnreM9Uq6OAWaNdUpa6nD7eNLlnHGgdpQ/exec";
+/*"https://script.google.com/macros/s/AKfycbxzXLIrS4HlifkvpekXxpvMr_CGS10tLtht7844KyELMBTqpgZ8VE22W4qmnsI1vbo2eQ/exec";*/
+/*"https://script.google.com/macros/s/AKfycbx0aDz8y2lvYx4mv-50MCZ3PW1GKh0Rx38GDIMFlJ2PswSRTyXrEkfObiXWII-wYr6Ohw/exec"*/
+/*"https://script.google.com/macros/s/AKfycbxZ-QoonLr4-FNAYV2x4wQkPQL_uiK3lt2VUAXdDEk49-06pQl-E-bLul8f7etLcRltMQ/exec";*/
+
+const API_CAMINANTES =
+"https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
+
 const JSON_PSR = "psragencia.json";
 
 /* ================= SUPERVISOR ================= */
-const params = new URLSearchParams(window.location.search);
-const supervisor = params.get("supervisor") || "";
 
-document.getElementById("supervisorInput").value = supervisor;
-document.getElementById("titulo").textContent = "Clausurados - " + supervisor;
+const params =
+new URLSearchParams(window.location.search);
+
+const supervisor =
+params.get("supervisor") || "";
+
+document.getElementById("supervisorInput")
+.value = supervisor;
+
+document.getElementById("titulo")
+.textContent =
+"Clausurados - " + supervisor;
 
 /* ================= LOADER ================= */
+
 function mostrarLoader() {
-  document.getElementById("loader").style.display = "flex";
+
+  document.getElementById("loader")
+  .style.display = "flex";
+
 }
 
 function ocultarLoader() {
-  document.getElementById("loader").style.display = "none";
+
+  document.getElementById("loader")
+  .style.display = "none";
+
 }
 
-/* ================= DROPDOWN ROJO ================= */
+/* ================= VISUAL ================= */
+
 function actualizarVisual(id) {
+
   const el = document.getElementById(id);
-  if (el.value) el.classList.add("has-value");
-  else el.classList.remove("has-value");
+
+  if (el.value)
+    el.classList.add("has-value");
+
+  else
+    el.classList.remove("has-value");
+
 }
+
+/* ================= MODAL ACCESSIBILITY ================= */
+
+document.addEventListener("hidden.bs.modal", () => {
+
+  if (document.activeElement) {
+    document.activeElement.blur();
+  }
+
+});
 
 /* ================= CAMINANTES ================= */
+
 mostrarLoader();
 
 fetch(API_CAMINANTES)
-  .then(r => r.json())
-  .then(data => {
-    const select = document.getElementById("caminanteSelect");
 
-    (data[supervisor] || []).forEach(c => {
-      const opt = document.createElement("option");
-      opt.value = c;
-      opt.textContent = c;
-      select.appendChild(opt);
-    });
-  })
-  .catch(() => {
-    new bootstrap.Modal(document.getElementById("modalError")).show();
-  })
-  .finally(() => {
-    ocultarLoader();
+.then(r => r.json())
+
+.then(data => {
+
+  const select =
+  document.getElementById("caminanteSelect");
+
+  (data[supervisor] || []).forEach(c => {
+
+    const opt =
+    document.createElement("option");
+
+    opt.value = c;
+    opt.textContent = c;
+
+    select.appendChild(opt);
+
   });
 
-document.getElementById("caminanteSelect").addEventListener("change", function () {
+})
+
+.catch(() => {
+
+  mostrarError("No se pudieron cargar caminantes");
+
+})
+
+.finally(() => {
+
+  ocultarLoader();
+
+});
+
+/* ================= CAMINANTE -> ZONAS ================= */
+
+document.getElementById("caminanteSelect")
+.addEventListener("change", function () {
+
   actualizarVisual("caminanteSelect");
 
   fetch(JSON_PSR)
-    .then(r => r.json())
-    .then(data => {
-      const zonas = data.filter(i => i.Caminante === this.value).map(i => i.Zona);
 
-      const zonaSelect = document.getElementById("zonaSelect");
-      zonaSelect.innerHTML = '<option value="">Seleccione zona</option>';
+  .then(r => r.json())
 
-      [...new Set(zonas)].forEach(z => {
-        const opt = document.createElement("option");
-        opt.value = z;
-        opt.textContent = z;
-        zonaSelect.appendChild(opt);
-      });
+  .then(data => {
+
+    const caminante =
+    this.value.trim().toLowerCase();
+
+    const zonas = data
+
+    .filter(i =>
+
+      String(i.Caminante)
+      .trim()
+      .toLowerCase() === caminante
+
+    )
+
+    .map(i =>
+
+      String(i.Zona).trim()
+
+    );
+
+    const zonaSelect =
+    document.getElementById("zonaSelect");
+
+    zonaSelect.innerHTML =
+    '<option value="">Seleccione zona</option>';
+
+    [...new Set(zonas)].forEach(z => {
+
+      const opt =
+      document.createElement("option");
+
+      opt.value = z;
+      opt.textContent = z;
+
+      zonaSelect.appendChild(opt);
+
     });
+
+  });
+
 });
 
-document.getElementById("zonaSelect").addEventListener("change", function () {
+/* ================= ZONA -> PSR ================= */
+
+document.getElementById("zonaSelect")
+.addEventListener("change", function () {
+
   actualizarVisual("zonaSelect");
 
   fetch(JSON_PSR)
-    .then(r => r.json())
-    .then(data => {
-      const psrList = data.filter(i => i.Zona === this.value);
 
-      const psrSelect = document.getElementById("psrSelect");
-      psrSelect.innerHTML = '<option value="">Seleccione PSR</option>';
+  .then(r => r.json())
 
-      psrList.forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p["Codigo PSR"];
-        opt.textContent = p["Codigo PSR"] + " - " + p["Nombre PSR"];
-        psrSelect.appendChild(opt);
-      });
+  .then(data => {
+
+    const zona =
+    this.value.trim().toLowerCase();
+
+    const psrList = data.filter(i =>
+
+      String(i.Zona)
+      .trim()
+      .toLowerCase() === zona
+
+    );
+
+    const psrSelect =
+    document.getElementById("psrSelect");
+
+    psrSelect.innerHTML =
+    '<option value="">Seleccione PSR</option>';
+
+    psrList.forEach(p => {
+
+      const codigo =
+      String(p["Codigo PSR"]).trim();
+
+      const nombre =
+      String(p["Nombre PSR"]).trim();
+
+      const opt =
+      document.createElement("option");
+
+      opt.value = codigo;
+
+      opt.textContent =
+      codigo + " - " + nombre;
+
+      psrSelect.appendChild(opt);
+
     });
+
+  });
+
 });
 
-document.getElementById("psrSelect").addEventListener("change", function () {
+/* ================= PSR ================= */
+
+document.getElementById("psrSelect")
+.addEventListener("change", function () {
+
   actualizarVisual("psrSelect");
+
 });
 
-/* ================= ENVÍO ================= */
+/* ================= ERROR ================= */
+
+function mostrarError(texto) {
+
+  document.getElementById("textoError")
+  .textContent = texto;
+
+  new bootstrap.Modal(
+    document.getElementById("modalError")
+  ).show();
+
+}
+
+/* ================= ENVIAR ================= */
+
 async function enviarAuditoria() {
 
-  const caminante = document.getElementById("caminanteSelect").value;
-  const zona = document.getElementById("zonaSelect").value;
-  const psrSelect = document.getElementById("psrSelect");
+  const caminante =
+  document.getElementById("caminanteSelect").value;
 
-  if (!caminante || !zona || !psrSelect.value) {
-    new bootstrap.Modal(document.getElementById("modalError")).show();
+  const zona =
+  document.getElementById("zonaSelect").value;
+
+  const psrSelect =
+  document.getElementById("psrSelect");
+
+  console.log({
+    caminante,
+    zona,
+    psr: psrSelect.value
+  });
+
+  if (!caminante) {
+    mostrarError("Seleccione caminante");
+    return;
+  }
+
+  if (!zona) {
+    mostrarError("Seleccione zona");
+    return;
+  }
+
+  if (!psrSelect.value) {
+    mostrarError("Seleccione PSR");
     return;
   }
 
@@ -327,69 +609,133 @@ async function enviarAuditoria() {
   try {
 
     let fotos = [];
-    const files = document.getElementById("fotos").files;
+
+    const files =
+    document.getElementById("fotos").files;
 
     for (let f of files) {
-      const base64 = await new Promise(resolve => {
+
+      const base64 =
+      await new Promise(resolve => {
+
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
+
+        reader.onload = () =>
+        resolve(reader.result);
+
         reader.readAsDataURL(f);
+
       });
+
       fotos.push(base64);
+
     }
 
     const payload = {
+
       Supervisor: supervisor,
+
       Categoria: "Clausurados",
+
       Caminante: caminante,
+
       Zona: zona,
-      PSR: psrSelect.options[psrSelect.selectedIndex].text,
-      Observaciones: document.getElementById("observaciones").value,
+
+      PSR:
+      psrSelect.options[
+        psrSelect.selectedIndex
+      ].text,
+
+      Observaciones:
+      document.getElementById("observaciones").value,
+
       Fotos: fotos.join("|||")
+
     };
 
     const res = await fetch(URL, {
+
       method: "POST",
+
       body: JSON.stringify(payload)
+
     });
 
     const text = await res.text();
 
     ocultarLoader();
 
-    if (text.includes("OK")) {
-      const modal = new bootstrap.Modal(document.getElementById("modalOk"));
+    console.log(text);
 
-      document.getElementById("modalOk").addEventListener("hidden.bs.modal", () => {
-        window.location.href = "index.html";
-      }, { once: true });
+    if (text.includes("OK")) {
+
+      const modal =
+      new bootstrap.Modal(
+        document.getElementById("modalOk")
+      );
+
+      document.getElementById("modalOk")
+      .addEventListener(
+        "hidden.bs.modal",
+        () => {
+          window.location.href = "index.html";
+        },
+        { once: true }
+      );
 
       modal.show();
 
     } else {
-      new bootstrap.Modal(document.getElementById("modalError")).show();
+
+      mostrarError(text);
+
     }
 
   } catch (e) {
+
     ocultarLoader();
-    new bootstrap.Modal(document.getElementById("modalError")).show();
+
+    console.error(e);
+
+    mostrarError("Error enviando auditoría");
+
   }
+
 }
 
-/* ================= UTIL ================= */
+/* ================= LIMPIAR ================= */
+
 function limpiarFormulario() {
-  ["caminanteSelect","zonaSelect","psrSelect"].forEach(id => {
-    const el = document.getElementById(id);
+
+  ["caminanteSelect",
+   "zonaSelect",
+   "psrSelect"]
+
+  .forEach(id => {
+
+    const el =
+    document.getElementById(id);
+
     el.value = "";
+
     el.classList.remove("has-value");
+
   });
 
-  document.getElementById("observaciones").value = "";
-  document.getElementById("fotos").value = "";
+  document.getElementById("observaciones")
+  .value = "";
+
+  document.getElementById("fotos")
+  .value = "";
+
 }
 
+/* ================= MENU ================= */
+
 function volverMenu() {
+
   window.location.href = "index.html";
+
 }
 
 </script>
