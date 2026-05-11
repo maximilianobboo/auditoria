@@ -6,7 +6,11 @@
 <title>Acompañamiento</title>
 
 <link rel="icon" type="image/png" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- 🔎 BUSCADOR PSR -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#000000">
@@ -131,7 +135,6 @@ input, select, textarea, button {
   accent-color:#d32f2f;
 }
 
-
 #globalLoader {
   position: fixed;
   inset: 0;
@@ -166,10 +169,37 @@ input, select, textarea, button {
   50% { clip-path: inset(0% 0 0 0); }
   100% { clip-path: inset(100% 0 0 0); }
 }
+
+/* 🔎 ESTILOS BUSCADOR */
+.ts-control{
+  background:#222 !important;
+  border:1px solid #444 !important;
+  color:white !important;
+}
+
+.ts-control input{
+  color:white !important;
+}
+
+.ts-dropdown{
+  background:#222 !important;
+  border:1px solid #444 !important;
+}
+
+.ts-dropdown .option{
+  color:white;
+}
+
+.ts-dropdown .active{
+  background:#d32f2f !important;
+  color:white !important;
+}
+
 </style>
 </head>
 
 <body>
+
 <!-- LOADER GLOBAL -->
 <div id="globalLoader">
   <div class="loader-box">
@@ -177,6 +207,7 @@ input, select, textarea, button {
     <img src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png" class="loader-fill">
   </div>
 </div>
+
 <div class="box">
 
 <h2 id="titulo"></h2>
@@ -185,6 +216,7 @@ input, select, textarea, button {
 <input id="supervisorInput" class="form-control mb-2" readonly>
 
 <div class="row-flex">
+
   <div class="col-flex">
     <label>Caminante</label>
     <select id="caminanteSelect" class="form-select">
@@ -198,6 +230,7 @@ input, select, textarea, button {
       <option value="">Seleccione</option>
     </select>
   </div>
+
 </div>
 
 <label>PSR</label>
@@ -273,15 +306,19 @@ input, select, textarea, button {
 
 <div id="bloqueMulti">
   <label>Stock Multimarca</label>
+
   <div class="stock-row">
+
     <div class="stock-option">
       <input type="radio" name="stockMulti" value="Si">
       <label>Si</label>
     </div>
+
     <div class="stock-option">
       <input type="radio" name="stockMulti" value="No">
       <label>No</label>
     </div>
+
   </div>
 </div>
 
@@ -294,6 +331,7 @@ input, select, textarea, button {
   <input id="comisionMayorista" type="number" class="form-control mb-2">
 
   <div class="row-flex">
+
     <div class="col-flex">
       <label>Costo fijo por uso de multimarca</label>
       <input id="costoFijo" type="number" class="form-control mb-2">
@@ -304,6 +342,7 @@ input, select, textarea, button {
       <input id="montoAdicional" type="number" class="form-control mb-1">
       <small style="color:#aaa;font-size:12px;">Si no cobran adicional = 0</small>
     </div>
+
   </div>
 
 </div>
@@ -312,7 +351,7 @@ input, select, textarea, button {
 <textarea id="observaciones" class="form-control mb-2" rows="3"></textarea>
 
 <label>Fotos</label>
-<!-- Elegir fotos de la galeria o tomar foto -->
+
 <input type="file" id="fotos" class="form-control mb-2" multiple accept="image/*">
 
 <button class="btn btn-main" onclick="enviarAuditoria()">Enviar Acompañamiento</button>
@@ -325,18 +364,23 @@ input, select, textarea, button {
 </div>
 
 <!-- MODALES -->
+
 <div class="modal fade" id="modalExito" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
+
       <div class="modal-header border-0">
         <h5>✔ Auditoría enviada</h5>
       </div>
+
       <div class="modal-body text-center">
         Registro guardado correctamente
       </div>
+
       <div class="modal-footer border-0">
         <button class="btn btn-success w-100" onclick="cerrarExito()">OK</button>
       </div>
+
     </div>
   </div>
 </div>
@@ -344,37 +388,48 @@ input, select, textarea, button {
 <div class="modal fade" id="modalError" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content bg-dark text-white">
+
       <div class="modal-header border-0">
         <h5>⚠ Atención</h5>
       </div>
+
       <div class="modal-body text-center">
         Complete los campos faltantes
       </div>
+
       <div class="modal-footer border-0">
         <button class="btn btn-danger w-100" data-bs-dismiss="modal">OK</button>
       </div>
+
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<!-- 🔎 BUSCADOR -->
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
 <script>
 
 const URL =  "https://script.google.com/macros/s/AKfycbzrpl4-oltEAYw7544gLHEiczksBoMcEIQXBVwT7KPoD1ImlNVATkR8SKvRubyN1uTJwg/exec";
-/* "https://script.google.com/macros/s/AKfycbzCcV3m9s3Q--icGcvDo6kh6GH4EVgOsSBn6iKkUwlKhr-NGA_A8tHo2_FbcmBSQw/exec"; */
+
 const API_CAMINANTES = "https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
+
 const JSON_PSR = "psragencia.json";
 
 const params = new URLSearchParams(window.location.search);
+
 const supervisor = params.get("supervisor") || "";
 
 const categoria = "Acompañamiento";
 
 document.getElementById("titulo").textContent = categoria + " - " + supervisor;
+
 document.getElementById("supervisorInput").value = supervisor;
 
 // FUNCIONES LOADER
+
 function showLoader(){
   document.getElementById("globalLoader").style.display = "flex";
 }
@@ -393,29 +448,36 @@ const bloque3 = document.getElementById("bloque3");
 const bloqueMulti = document.getElementById("bloqueMulti");
 const bloqueRecargas = document.getElementById("bloqueRecargas");
 
+let tomPSR = null;
+
 function pintarSelect(s){
   s.classList.toggle("selected-red", s.value!=="");
 }
 
-
 showLoader();
 
 fetch(API_CAMINANTES)
+
 .then(r => r.json())
+
 .then(data => {
 
   caminanteSelect.innerHTML = `<option value="">Seleccione</option>`;
 
   if (data[supervisor]) {
+
     data[supervisor].forEach(c => {
       caminanteSelect.innerHTML += `<option>${c}</option>`;
     });
+
   }
 
 })
+
 .catch(err => {
   console.error("Error cargando caminantes:", err);
 })
+
 .finally(() => {
   hideLoader();
 });
@@ -425,21 +487,67 @@ document.querySelectorAll("select").forEach(s=>{
 });
 
 caminanteSelect.onchange = function(){
-  fetch(JSON_PSR).then(r=>r.json()).then(data=>{
+
+  fetch(JSON_PSR)
+
+  .then(r=>r.json())
+
+  .then(data=>{
+
     zonaSelect.innerHTML='<option value="">Seleccione</option>';
-    [...new Set(data.filter(i=>i.Caminante===this.value).map(i=>i.Zona))]
+
+    [...new Set(
+      data.filter(i=>i.Caminante===this.value)
+      .map(i=>i.Zona)
+    )]
+
     .forEach(z=>zonaSelect.innerHTML+=`<option>${z}</option>`);
+
   });
+
 };
 
 zonaSelect.onchange = function(){
-  fetch(JSON_PSR).then(r=>r.json()).then(data=>{
-    psrSelect.innerHTML='<option>Seleccione PSR</option>';
-    data.filter(i=>i.Zona===this.value)
+
+  fetch(JSON_PSR)
+
+  .then(r=>r.json())
+
+  .then(data=>{
+
+    psrSelect.innerHTML='<option value="">Seleccione PSR</option>';
+
+    data
+    .filter(i=>i.Zona===this.value)
+
     .forEach(p=>{
-      psrSelect.innerHTML+=`<option>${p["Codigo PSR"]} - ${p["Nombre PSR"]}</option>`;
+
+      psrSelect.innerHTML += `
+        <option>
+          ${p["Codigo PSR"]} - ${p["Nombre PSR"]}
+        </option>
+      `;
+
     });
+
+    // 🔎 destruir instancia anterior
+    if(tomPSR){
+      tomPSR.destroy();
+    }
+
+    // 🔎 crear buscador
+    tomPSR = new TomSelect("#psrSelect",{
+      create:false,
+      sortField:{
+        field:"text",
+        direction:"asc"
+      },
+      placeholder:"Buscar PSR...",
+      maxOptions:500
+    });
+
   });
+
 };
 
 psrSelect.onchange = ()=>bloque1.style.display="flex";
@@ -464,7 +572,7 @@ document.querySelectorAll('input[name="stockMulti"]').forEach(r=>{
 
 async function enviarAuditoria(){
 
-  showLoader(); // 👈 AGREGADO
+  showLoader();
 
   const stockMulti=document.querySelector('input[name="stockMulti"]:checked');
 
@@ -480,12 +588,13 @@ async function enviarAuditoria(){
     !sim.value||
     !stockMulti
   ){
-    hideLoader(); // 👈 AGREGADO
+    hideLoader();
     new bootstrap.Modal(document.getElementById('modalError')).show();
     return;
   }
 
   let fotos=[];
+
   for(let f of document.getElementById("fotos").files){
     fotos.push(await toBase64(f));
   }
@@ -509,18 +618,24 @@ async function enviarAuditoria(){
     montoAdicional:montoAdicional.value,
     observaciones:observaciones.value,
     fotos: fotos
-    /*fotos:fotos.join(", ")*/
   };
 
-fetch(URL,{method:"POST",body:JSON.stringify(data)})
-.then(()=>{
-  hideLoader(); // 👈 AGREGADO
-  new bootstrap.Modal(document.getElementById('modalExito')).show();
-  setTimeout(()=>window.location.href="index.html",1500);
-})
-.catch(()=>{
-  hideLoader(); // 👈 AGREGADO
-});
+  fetch(URL,{method:"POST",body:JSON.stringify(data)})
+
+  .then(()=>{
+
+    hideLoader();
+
+    new bootstrap.Modal(document.getElementById('modalExito')).show();
+
+    setTimeout(()=>window.location.href="index.html",1500);
+
+  })
+
+  .catch(()=>{
+    hideLoader();
+  });
+
 }
 
 function toBase64(f){
