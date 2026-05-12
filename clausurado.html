@@ -758,8 +758,7 @@ async function enviarAuditoria() {
 function limpiarFormulario() {
 
   ["caminanteSelect",
-   "zonaSelect",
-   "psrSelect"]
+   "zonaSelect"]
 
   .forEach(id => {
 
@@ -772,6 +771,28 @@ function limpiarFormulario() {
 
   });
 
+  /* ===== LIMPIAR PSR ===== */
+
+  const psr =
+  document.getElementById("psrSelect");
+
+  psr.innerHTML =
+  '<option value="">Seleccione PSR</option>';
+
+  psr.classList.remove("has-value");
+
+  if (tomPSR) {
+
+    tomPSR.clear();
+    tomPSR.clearOptions();
+    tomPSR.destroy();
+
+    tomPSR = null;
+
+  }
+
+  /* ===== LIMPIAR TEXTO ===== */
+
   document.getElementById("observaciones")
   .value = "";
 
@@ -779,7 +800,6 @@ function limpiarFormulario() {
   .value = "";
 
 }
-
 /* ================= MENU ================= */
 
 function volverMenu() {
