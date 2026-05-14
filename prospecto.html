@@ -3,142 +3,184 @@
 <head>
   <meta charset="UTF-8">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport"
+        content="width=device-width,
+                 initial-scale=1.0,
+                 maximum-scale=1.0,
+                 user-scalable=no">
 
   <title>Prospecto</title>
 
-  <link rel="icon" href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+  <link rel="icon"
+        href="https://i.postimg.cc/0yX4db3M/logo-movil.png">
+
   <meta name="theme-color" content="#000000">
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet">
 
   <style>
-    body {
-      background: linear-gradient(180deg, #000000, #1a1a1a);
-      color: white;
-      margin: 0;
-      font-family: Arial;
+
+    body{
+      background:linear-gradient(180deg,#000000,#1a1a1a);
+      color:white;
+      margin:0;
+      font-family:Arial;
     }
 
-    .container-app {
-      max-width: 480px;
-      margin: auto;
-      min-height: 100vh;
-      background: #111;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
+    .container-app{
+      max-width:480px;
+      margin:auto;
+      min-height:100vh;
+      background:#111;
+      padding:20px;
+      display:flex;
+      flex-direction:column;
     }
 
-    #titulo {
-      background: #d32f2f;
-      text-align: center;
-      padding: 12px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      font-size: 14px;
+    #titulo{
+      background:#d32f2f;
+      text-align:center;
+      padding:12px;
+      border-radius:10px;
+      margin-bottom:15px;
+      font-size:14px;
     }
 
-    label { margin-top: 12px; color: #ccc; }
-
-    .form-control {
-      background: #222;
-      border: 1px solid #444;
-      color: white;
+    label{
+      margin-top:12px;
+      color:#ccc;
     }
 
-    .btn-claro {
-      background: #d32f2f;
-      color: white;
-      width: 100%;
-      margin-top: 18px;
-      padding: 14px;
-      border-radius: 10px;
+    .form-control,
+    .form-select{
+      background:#222;
+      border:1px solid #444;
+      color:white;
     }
 
-    .btn-back, .btn-clear {
-      padding: 12px;
-      border-radius: 10px;
+    .selected-red{
+      background:#d32f2f !important;
+      color:#fff !important;
+      font-weight:bold;
     }
 
-    .btn-back { background: #333; color: #ccc; }
-    .btn-clear { background: #2e7d32; color: white; }
+    .btn-claro{
+      background:#d32f2f;
+      color:white;
+      width:100%;
+      margin-top:18px;
+      padding:14px;
+      border-radius:10px;
+      border:none;
+    }
+
+    .btn-back,
+    .btn-clear{
+      padding:12px;
+      border-radius:10px;
+      border:none;
+    }
+
+    .btn-back{
+      background:#333;
+      color:#ccc;
+    }
+
+    .btn-clear{
+      background:#2e7d32;
+      color:white;
+    }
 
     /* ===== LOADER ===== */
-    #loader {
-      position: fixed;
-      inset: 0;
-      background: black;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
+
+    #loader{
+      position:fixed;
+      inset:0;
+      background:black;
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
     }
 
-    .logo-loader {
-      position: relative;
-      width: 140px;
-      height: 140px;
+    .logo-loader{
+      position:relative;
+      width:140px;
+      height:140px;
     }
 
-    .logo-base {
-      width: 100%;
-      filter: grayscale(100%) brightness(0.5);
+    .logo-base{
+      width:100%;
+      filter:grayscale(100%) brightness(0.5);
     }
 
-    .logo-fill {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      clip-path: inset(100% 0 0 0);
-      animation: llenar 2s cubic-bezier(0.65,0,0.35,1) infinite;
+    .logo-fill{
+      position:absolute;
+      inset:0;
+      width:100%;
+      clip-path:inset(100% 0 0 0);
+      animation:llenar 2s cubic-bezier(0.65,0,0.35,1) infinite;
     }
 
-    @keyframes llenar {
-      0% { clip-path: inset(100% 0 0 0); }
-      50% { clip-path: inset(0% 0 0 0); }
-      100% { clip-path: inset(100% 0 0 0); }
+    @keyframes llenar{
+      0%{clip-path:inset(100% 0 0 0);}
+      50%{clip-path:inset(0% 0 0 0);}
+      100%{clip-path:inset(100% 0 0 0);}
     }
 
-    /* MODAL */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
+    /* ===== MODAL ===== */
+
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
     }
 
-    .modal-box {
-      background: #1c1c1c;
-      padding: 25px;
-      border-radius: 12px;
-      text-align: center;
-      width: 85%;
-      max-width: 320px;
+    .modal-box{
+      background:#1c1c1c;
+      padding:25px;
+      border-radius:12px;
+      text-align:center;
+      width:85%;
+      max-width:320px;
     }
 
-    .btn-ok {
-      background: #4caf50;
-      color: white;
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      border-radius: 10px;
+    .btn-ok{
+      background:#4caf50;
+      color:white;
+      width:100%;
+      padding:12px;
+      margin-top:15px;
+      border-radius:10px;
+      border:none;
     }
+
   </style>
 </head>
 
 <body>
 
-<!-- LOADER -->
+<!-- ===== LOADER ===== -->
+
 <div id="loader">
+
   <div class="logo-loader">
-    <img src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png" class="logo-base">
-    <img src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png" class="logo-fill">
+
+    <img
+      src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png"
+      class="logo-base">
+
+    <img
+      src="https://i.postimg.cc/66GFrCnz/logo-claro-removebg-preview.png"
+      class="logo-fill">
+
   </div>
+
 </div>
 
 <div class="container-app">
@@ -148,126 +190,433 @@
   <form id="form">
 
     <label>Nombre y Apellido</label>
-    <input id="nombre" class="form-control" required>
+
+    <input id="nombre"
+           class="form-control"
+           required>
 
     <label>Nombre Fantasía</label>
-    <input id="fantasia" class="form-control" required>
+
+    <input id="fantasia"
+           class="form-control"
+           required>
 
     <label>Domicilio</label>
-    <input id="domicilio" class="form-control" required>
+
+    <input id="domicilio"
+           class="form-control"
+           required>
 
     <label>Teléfono</label>
-    <input id="telefono" class="form-control" type="number" required>
+
+    <input id="telefono"
+           class="form-control"
+           type="number"
+           required>
 
     <label>Email</label>
-    <input id="email" class="form-control" type="email" required>
+
+    <input id="email"
+           class="form-control"
+           type="email"
+           required>
 
     <label>Observaciones</label>
-    <textarea id="observaciones" class="form-control"></textarea>
+
+    <textarea id="observaciones"
+              class="form-control"></textarea>
+
+    <!-- ===== CAMINANTE ===== -->
+
+    <label>Caminante sugerido</label>
+
+    <select id="caminanteSelect"
+            class="form-select">
+
+      <option value="">Cargando caminantes...</option>
+
+    </select>
+
+    <!-- ===== ZONA ===== -->
+
+    <label>Frecuencia sugerida</label>
+
+    <select id="frecuenciaSelect"
+            class="form-select">
+
+      <option value="">Seleccione</option>
+
+    </select>
+
+    <!-- ===== FOTO ===== -->
 
     <label>Foto</label>
-    <input id="foto" class="form-control" type="file" accept="image/*">
 
-    <button class="btn btn-claro" type="submit">Enviar Auditoría</button>
+    <input id="foto"
+           class="form-control"
+           type="file"
+           accept="image/*">
+
+    <!-- ===== BOTON ===== -->
+
+    <button class="btn btn-claro"
+            type="submit">
+
+      Enviar Auditoría
+
+    </button>
 
     <div class="d-flex gap-2 mt-3">
-      <button type="button" class="btn btn-back w-50" onclick="volver()">Menú</button>
-      <button type="button" class="btn btn-clear w-50" onclick="limpiarFormulario()">Borrar formulario</button>
+
+      <button type="button"
+              class="btn btn-back w-50"
+              onclick="volver()">
+
+        Menú
+
+      </button>
+
+      <button type="button"
+              class="btn btn-clear w-50"
+              onclick="limpiarFormulario()">
+
+        Borrar formulario
+
+      </button>
+
     </div>
 
   </form>
+
 </div>
 
-<!-- MODAL -->
-<div id="modal" class="modal-overlay">
+<!-- ===== MODAL ===== -->
+
+<div id="modal"
+     class="modal-overlay">
+
   <div class="modal-box">
+
     <h3>✔ Auditoría enviada</h3>
-    <button class="btn-ok" onclick="cerrarModal()">OK</button>
+
+    <button class="btn-ok"
+            onclick="cerrarModal()">
+
+      OK
+
+    </button>
+
   </div>
+
 </div>
 
 <script>
 
-/* const URL = "https://script.google.com/macros/s/AKfycbzBZ3QHSzgRl6UupNEnX0nebiOECLcGyjZ22h7YXEO74pLMHl3Gewuvx2K4NzagTjP7/exec";*/
+/* ===== URLS ===== */
 
-const URL = "https://script.google.com/macros/s/AKfycbwoVJVVC60mO0VU68QywXR2V18naHvmqKdljCEj-A58PBbzbmIYzPRYB59uQyPVlm4/exec";
+const URL = "https://script.google.com/macros/s/AKfycbzxvz7vZPZfwzpmgQCNSDwk7Sjc15DECkw4SLXln1PaD3EuysSjE5UGrBnNlUW7hi2Y/exec";
 
-const params = new URLSearchParams(window.location.search);
-const supervisor = params.get("supervisor") || "";
+/* const URL =
+"https://script.google.com/macros/s/AKfycbwoVJVVC60mO0VU68QywXR2V18naHvmqKdljCEj-A58PBbzbmIYzPRYB59uQyPVlm4/exec";*/
 
-document.getElementById("titulo").textContent = "Prospecto - " + supervisor;
+const API_CAMINANTES =
+"https://script.google.com/macros/s/AKfycby6OwTzLN8f4H-GraDredyHS-4RcLKc48mZyIqvQ3ef7hFfE6GgNK8zUD5PzhVMInew6Q/exec";
 
-// FUNCIONES LOADER
-function mostrarLoader() {
-  document.getElementById("loader").style.display = "flex";
+const JSON_PSR = "psragencia.json";
+
+/* ===== PARAMETROS ===== */
+
+const params =
+new URLSearchParams(window.location.search);
+
+const supervisor =
+params.get("supervisor") || "";
+
+/* ===== TITULO ===== */
+
+document.getElementById("titulo").textContent =
+"Prospecto - " + supervisor;
+
+/* ===== SELECTS ===== */
+
+const caminanteSelect =
+document.getElementById("caminanteSelect");
+
+const frecuenciaSelect =
+document.getElementById("frecuenciaSelect");
+
+/* ===== DATA ===== */
+
+let psrData = [];
+
+/* ===== LOADER ===== */
+
+function mostrarLoader(){
+
+  document.getElementById("loader")
+  .style.display = "flex";
+
 }
-function ocultarLoader() {
-  document.getElementById("loader").style.display = "none";
+
+function ocultarLoader(){
+
+  document.getElementById("loader")
+  .style.display = "none";
+
 }
 
-// ENVIAR
-document.getElementById("form").addEventListener("submit", async (e) => {
+/* ===== CARGAR CAMINANTES ===== */
+
+mostrarLoader();
+
+fetch(API_CAMINANTES)
+
+.then(r => r.json())
+
+.then(data => {
+
+  caminanteSelect.innerHTML =
+  `<option value="">Seleccione</option>`;
+
+  if(data[supervisor]){
+
+    data[supervisor].forEach(caminante => {
+
+      caminanteSelect.innerHTML += `
+        <option value="${caminante}">
+          ${caminante}
+        </option>
+      `;
+
+    });
+
+  }
+
+})
+
+.catch(err => {
+
+  console.error(
+    "Error cargando caminantes:",
+    err
+  );
+
+  caminanteSelect.innerHTML =
+  `<option value="">Error al cargar</option>`;
+
+})
+
+.finally(() => {
+
+  ocultarLoader();
+
+});
+
+/* ===== CARGAR JSON ===== */
+
+fetch(JSON_PSR)
+
+.then(r => r.json())
+
+.then(data => {
+
+  psrData = data;
+
+})
+
+.catch(err => {
+
+  console.error(
+    "Error cargando JSON:",
+    err
+  );
+
+});
+
+/* ===== CAMINANTE CHANGE ===== */
+
+caminanteSelect.addEventListener("change", () => {
+
+  caminanteSelect.classList.toggle(
+    "selected-red",
+    caminanteSelect.value !== ""
+  );
+
+  frecuenciaSelect.innerHTML =
+  `<option value="">Seleccione</option>`;
+
+  frecuenciaSelect.classList.remove(
+    "selected-red"
+  );
+
+  const caminante =
+  caminanteSelect.value;
+
+  /* ===== BUSCAR ZONAS ===== */
+
+  const zonas = [
+
+    ...new Set(
+
+      psrData
+      .filter(i => i.Caminante === caminante)
+      .map(i => i.Zona)
+
+    )
+
+  ];
+
+  zonas.forEach(zona => {
+
+    frecuenciaSelect.innerHTML += `
+      <option value="${zona}">
+        ${zona}
+      </option>
+    `;
+
+  });
+
+});
+
+/* ===== FRECUENCIA CHANGE ===== */
+
+frecuenciaSelect.addEventListener("change", () => {
+
+  frecuenciaSelect.classList.toggle(
+    "selected-red",
+    frecuenciaSelect.value !== ""
+  );
+
+});
+
+/* ===== ENVIAR ===== */
+
+document.getElementById("form")
+.addEventListener("submit", async (e) => {
+
   e.preventDefault();
 
-  mostrarLoader(); // 👈 clave
+  mostrarLoader();
 
-  const file = document.getElementById("foto").files[0];
+  const file =
+  document.getElementById("foto").files[0];
+
   let base64 = "";
 
-  if (file) {
+  if(file){
+
     base64 = await new Promise(resolve => {
+
       const reader = new FileReader();
-      reader.onload = () => resolve(reader.result.split(",")[1]);
+
+      reader.onload = () =>
+      resolve(reader.result.split(",")[1]);
+
       reader.readAsDataURL(file);
+
     });
+
   }
 
   const payload = {
+
     Supervisor: supervisor,
+
+    Caminante: caminanteSelect.value,
+
+    FrecuenciaSugerida:
+    frecuenciaSelect.value,
+
     Categoria: "Prospecto",
+
     NombreApellido: nombre.value,
+
     NombreFantasia: fantasia.value,
+
     Domicilio: domicilio.value,
+
     Telefono: telefono.value,
+
     Email: email.value,
+
     Observaciones: observaciones.value,
+
     Foto: base64
+
   };
 
-  try {
-    const res = await fetch(URL, {
-      method: "POST",
-      body: JSON.stringify(payload)
+  try{
+
+    const res = await fetch(URL,{
+
+      method:"POST",
+
+      body:JSON.stringify(payload)
+
     });
 
     const text = await res.text();
 
-    if (text.includes("OK")) {
+    if(text.includes("OK")){
+
       form.reset();
+
+      caminanteSelect.classList.remove(
+        "selected-red"
+      );
+
+      frecuenciaSelect.classList.remove(
+        "selected-red"
+      );
+
       modal.style.display = "flex";
-    } else {
+
+    }else{
+
       alert("Error: " + text);
+
     }
 
-  } catch {
+  }catch{
+
     alert("Error de conexión ❌");
-  } finally {
-    ocultarLoader(); // 👈 siempre se oculta
+
+  }finally{
+
+    ocultarLoader();
+
   }
+
 });
 
-// MODAL
-function cerrarModal() {
+/* ===== MODAL ===== */
+
+function cerrarModal(){
+
   modal.style.display = "none";
+
   window.location.href = "index.html";
+
 }
 
-function limpiarFormulario() {
+function limpiarFormulario(){
+
   form.reset();
+
+  caminanteSelect.classList.remove(
+    "selected-red"
+  );
+
+  frecuenciaSelect.classList.remove(
+    "selected-red"
+  );
+
 }
 
-function volver() {
+function volver(){
+
   window.location.href = "index.html";
+
 }
 
 </script>
