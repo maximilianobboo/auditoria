@@ -530,7 +530,7 @@
       mostrarDetalleLote(registro);
     });
 
-    fetch("productos_vendidos.json", { cache: "no-store" })
+    fetch("lotes.json", { cache: "no-store" })
       .then((respuesta) => {
         if (!respuesta.ok) {
           throw new Error(`Error HTTP ${respuesta.status}`);
