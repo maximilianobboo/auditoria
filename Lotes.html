@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lotes</title>
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #000000, #1a1a1a);
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    main {
+      width: min(480px, 100%);
+      min-height: 100vh;
+      box-sizing: border-box;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+      background: #111;
+    }
+
+    h1 {
+      width: 100%;
+      box-sizing: border-box;
+      margin: 0 0 20px;
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: #d32f2f;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    #aviso {
+      margin-top: 8px;
+      color: #ff5252;
+      font-size: 14px;
+    }
+
+    #aviso[hidden] {
+      display: none;
+    }
+
+    .lote-form {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .lote-form input {
+      min-width: 0;
+      flex: 0 1 34%;
+      padding: 12px 8px;
+      border: 1px solid #555;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      text-align: center;
+    }
+
+    .lista-seccion {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid #555;
+    }
+
+    .lista-seccion h2 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: normal;
+      text-align: center;
+    }
+
+    .tabla-contenedor {
+      width: 100%;
+      margin-top: 12px;
+      overflow-x: auto;
+    }
+
+    #lista-lotes {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    #lista-lotes th,
+    #lista-lotes td {
+      padding: 10px 6px;
+      border-bottom: 1px solid #333;
+      border-right: 1px solid #333;
+    }
+
+    #lista-lotes th:first-child,
+    #lista-lotes td:first-child {
+      border-left: 1px solid #333;
+    }
+
+    #lista-lotes th {
+      color: #bbb;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    #lista-lotes td {
+      color: white;
+      overflow-wrap: anywhere;
+      font-size: 13px;
+    }
+
+    #lista-lotes th:last-child,
+    #lista-lotes td:last-child {
+      text-align: center;
+    }
+
+    .eliminar-lote {
+      padding: 6px 7px;
+      border: 0;
+      border-radius: 6px;
+      background: #d32f2f;
+      color: white;
+      cursor: pointer;
+    }
+
+    .eliminar-lote:hover {
+      background: #ff5252;
+    }
+
+    .lote-form button,
+    .acciones-lista button,
+    .back-link {
+      display: inline-block;
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 10px;
+      background: #d32f2f;
+      color: white;
+      font: inherit;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .lote-form button {
+      height: 33px;
+      padding: 0 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: center;
+      font-size: 10px;
+      line-height: 10px;
+    }
+
+    .lote-form button:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .acciones-lista {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .acciones-lista button,
+    .acciones-lista .back-link {
+      flex: 1;
+      box-sizing: border-box;
+    }
+
+    .acciones-lista .back-link {
+      background: #333;
+    }
+
+    #vaciar-lista {
+      background: #2e7d32;
+    }
+
+    .acciones-lista .back-link:hover {
+      background: #444;
+    }
+
+    #vaciar-lista:hover {
+      background: #388e3c;
+    }
+
+    .lote-form button:hover {
+      background: #ff5252;
+    }
+
+    #detalle-lote {
+      width: min(360px, calc(100vw - 32px));
+      max-width: none;
+      box-sizing: border-box;
+      margin: auto;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      background: #2e7d32;
+      color: white;
+      font-size: 13px;
+      line-height: 1.25;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+    }
+
+    #detalle-lote::backdrop {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(3px);
+    }
+
+    .detalle-titulo {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) 2fr;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .detalle-titulo h2,
+    #detalle-codigo-lote {
+      margin: 0;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .detalle-campos {
+      display: grid;
+      gap: 6px;
+      margin: 0;
+    }
+
+    .detalle-campos div {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) 2fr;
+      align-items: baseline;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .detalle-campos dt {
+      font-size: 10px;
+      opacity: 0.85;
+    }
+
+    .detalle-campos dd {
+      margin: 0;
+      overflow-wrap: anywhere;
+      font-weight: bold;
+    }
+
+    .acciones-detalle {
+      display: flex;
+      gap: 6px;
+      margin-top: 14px;
+    }
+
+    .acciones-detalle button {
+      flex: 1;
+      padding: 8px 4px;
+      border: 1px solid white;
+      border-radius: 8px;
+      background: transparent;
+      color: white;
+      font: inherit;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .acciones-detalle button:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    #confirmar-lote {
+      border-color: #1565c0;
+      background: #1565c0;
+    }
+
+    #confirmar-lote:hover {
+      background: #1976d2;
+    }
+
+    #salir-detalle {
+      border-color: #c62828;
+      background: #c62828;
+    }
+
+    #salir-detalle:hover {
+      background: #e53935;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Lotes</h1>
+    <form class="lote-form" novalidate>
+      <input
+        type="text"
+        name="letras"
+        placeholder="ABC"
+        aria-label="Tres letras"
+        pattern="[A-Za-z]{3}"
+        minlength="3"
+        maxlength="3"
+        title="Ingresa exactamente 3 letras"
+        required>
+      <input
+        type="text"
+        name="numeros"
+        placeholder="1234"
+        aria-label="Cuatro números"
+        inputmode="numeric"
+        pattern="[0-9]{4}"
+        minlength="4"
+        maxlength="4"
+        title="Ingresa exactamente 4 números"
+        required>
+      <button type="submit" aria-label="Agregar lote" disabled>+</button>
+    </form>
+    <div id="aviso" role="alert" aria-live="assertive" hidden></div>
+    <section class="lista-seccion" aria-labelledby="titulo-lista-lotes">
+      <h2 id="titulo-lista-lotes">Lista de Lotes</h2>
+      <div class="tabla-contenedor">
+        <table id="lista-lotes" aria-live="polite">
+          <thead>
+            <tr>
+              <th scope="col">Codigo PSR</th>
+              <th scope="col">Nombre PSR</th>
+              <th scope="col">Caminante</th>
+              <th scope="col"><span class="visually-hidden">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+    <div class="acciones-lista">
+      <a class="back-link" href="index.html">Menú</a>
+      <button id="vaciar-lista" type="button">Vaciar lista</button>
+    </div>
+  </main>
+  <dialog id="detalle-lote" aria-labelledby="titulo-detalle-lote">
+    <div class="detalle-titulo">
+      <h2 id="titulo-detalle-lote">LOTE</h2>
+      <p id="detalle-codigo-lote"></p>
+    </div>
+    <dl class="detalle-campos">
+      <div>
+        <dt>Codigo PSR</dt>
+        <dd id="detalle-codigo-psr"></dd>
+      </div>
+      <div>
+        <dt>Nombre PSR</dt>
+        <dd id="detalle-nombre-psr"></dd>
+      </div>
+      <div>
+        <dt>Caminante</dt>
+        <dd id="detalle-caminante"></dd>
+      </div>
+      <div>
+        <dt>Fecha Asignacion</dt>
+        <dd id="detalle-fecha-asignacion"></dd>
+      </div>
+    </dl>
+    <div class="acciones-detalle">
+      <button id="confirmar-lote" type="button">Agregar a la lista</button>
+      <button id="salir-detalle" type="button">Salir</button>
+    </div>
+  </dialog>
+  <script>
+    const formularioLote = document.querySelector(".lote-form");
+    const listaLotes = document.getElementById("lista-lotes");
+    const cuerpoListaLotes = listaLotes.querySelector("tbody");
+    const aviso = document.getElementById("aviso");
+    const botonVaciarLista = document.getElementById("vaciar-lista");
+    const botonAgregarLote = formularioLote.querySelector('button[type="submit"]');
+    const detalleLote = document.getElementById("detalle-lote");
+    const botonConfirmarLote = document.getElementById("confirmar-lote");
+    const botonSalirDetalle = document.getElementById("salir-detalle");
+    const campoLetras = formularioLote.elements.letras;
+    const campoNumeros = formularioLote.elements.numeros;
+    let temporizadorAviso;
+    let lotesDisponibles = [];
+    let lotePendiente = null;
+
+    campoLetras.addEventListener("input", () => {
+      campoLetras.value = campoLetras.value.replace(/[^A-Za-z]/g, "").slice(0, 3);
+    });
+
+    campoNumeros.addEventListener("input", () => {
+      campoNumeros.value = campoNumeros.value.replace(/[^0-9]/g, "").slice(0, 4);
+    });
+
+    botonVaciarLista.addEventListener("click", () => {
+      cuerpoListaLotes.replaceChildren();
+    });
+
+    botonSalirDetalle.addEventListener("click", () => {
+      formularioLote.reset();
+      detalleLote.close();
+    });
+
+    botonConfirmarLote.addEventListener("click", () => {
+      if (!lotePendiente) return;
+
+      agregarFilaLote(lotePendiente);
+      lotePendiente = null;
+      formularioLote.reset();
+      detalleLote.close();
+    });
+
+    detalleLote.addEventListener("close", () => {
+      lotePendiente = null;
+      campoLetras.focus();
+    });
+
+    function mostrarAviso(mensaje, campo) {
+      aviso.textContent = mensaje;
+      aviso.hidden = false;
+      clearTimeout(temporizadorAviso);
+      temporizadorAviso = setTimeout(() => {
+        aviso.hidden = true;
+        aviso.textContent = "";
+      }, 3000);
+      if (campo) campo.focus();
+    }
+
+    function agregarCelda(fila, texto) {
+      const celda = document.createElement("td");
+      celda.textContent = texto;
+      fila.appendChild(celda);
+    }
+
+    function agregarFilaLote(registro) {
+      const fila = document.createElement("tr");
+      agregarCelda(fila, String(registro["Codigo PSR"]));
+      agregarCelda(fila, String(registro["Razon Social (Nombre PSR)"]));
+      agregarCelda(fila, String(registro.Caminante));
+
+      const celdaAccion = document.createElement("td");
+      const botonEliminar = document.createElement("button");
+      botonEliminar.type = "button";
+      botonEliminar.className = "eliminar-lote";
+      botonEliminar.setAttribute("aria-label", "Eliminar lote");
+      botonEliminar.title = "Eliminar lote";
+      botonEliminar.innerHTML = `
+        <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+          <path fill="currentColor" d="M9 3h6l1 2h5v2H3V5h5l1-2zm-3 6h12l-1 12H7L6 9zm3 2v8h2v-8H9zm4 0v8h2v-8h-2z"/>
+        </svg>`;
+      botonEliminar.addEventListener("click", () => fila.remove());
+      celdaAccion.appendChild(botonEliminar);
+      fila.appendChild(celdaAccion);
+      cuerpoListaLotes.appendChild(fila);
+    }
+
+    function mostrarDetalleLote(registro) {
+      lotePendiente = registro;
+      document.getElementById("detalle-codigo-lote").textContent = String(registro.Lote);
+      document.getElementById("detalle-codigo-psr").textContent = String(registro["Codigo PSR"] ?? "");
+      document.getElementById("detalle-nombre-psr").textContent = String(registro["Razon Social (Nombre PSR)"] ?? "");
+      document.getElementById("detalle-caminante").textContent = String(registro.Caminante ?? "");
+      document.getElementById("detalle-fecha-asignacion").textContent =
+        String(registro.Fecha ?? registro["Fecha Asignacion"] ?? registro["Fecha Asignación"] ?? "No disponible");
+      detalleLote.showModal();
+    }
+
+    formularioLote.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+
+      const letras = formularioLote.elements.letras.value;
+      const numeros = formularioLote.elements.numeros.value;
+      if (!/^[A-Za-z]{3}$/.test(letras)) {
+        mostrarAviso("Complete el campo Texto", formularioLote.elements.letras);
+        return;
+      }
+
+      if (!/^[0-9]{4}$/.test(numeros)) {
+        mostrarAviso("Complete el campo Números", formularioLote.elements.numeros);
+        return;
+      }
+
+      const codigoLote = `${letras}${numeros}`.toUpperCase();
+      const registro = lotesDisponibles.find((item) =>
+        String(item.Lote).trim().toUpperCase() === codigoLote
+      );
+
+      if (!registro) {
+        mostrarAviso("No se encontró el lote ingresado", campoLetras);
+        return;
+      }
+
+      mostrarDetalleLote(registro);
+    });
+
+    fetch("productos_vendidos.json")
+      .then((respuesta) => {
+        if (!respuesta.ok) {
+          throw new Error(`Error HTTP ${respuesta.status}`);
+        }
+        return respuesta.json();
+      })
+      .then((datos) => {
+        if (!Array.isArray(datos)) {
+          throw new Error("El archivo de productos vendidos no contiene una lista");
+        }
+        lotesDisponibles = datos;
+        botonAgregarLote.disabled = false;
+      })
+      .catch((error) => {
+        console.error("Error cargando productos vendidos:", error);
+        mostrarAviso("No se pudieron cargar los lotes. Recargue la página.", null);
+      });
+  </script>
+</body>
+</html>
