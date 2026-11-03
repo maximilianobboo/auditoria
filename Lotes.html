@@ -385,7 +385,7 @@
         <dd id="detalle-caminante"></dd>
       </div>
       <div>
-        <dt>Fecha Asignacion</dt>
+        <dt>Fecha Entrega</dt>
         <dd id="detalle-fecha-asignacion"></dd>
       </div>
     </dl>
@@ -458,11 +458,21 @@
       fila.appendChild(celda);
     }
 
+    function obtenerTexto(registro, ...campos) {
+      for (const campo of campos) {
+        const valor = registro[campo];
+        if (valor !== null && valor !== undefined && String(valor).trim() !== "") {
+          return String(valor).trim();
+        }
+      }
+      return "";
+    }
+
     function agregarFilaLote(registro) {
       const fila = document.createElement("tr");
-      agregarCelda(fila, String(registro["Codigo PSR"]));
-      agregarCelda(fila, String(registro["Razon Social (Nombre PSR)"]));
-      agregarCelda(fila, String(registro.Caminante));
+      agregarCelda(fila, obtenerTexto(registro, "Codigo PSR"));
+      agregarCelda(fila, obtenerTexto(registro, "Razon Social (Nombre PSR)", "Nombre PSR"));
+      agregarCelda(fila, obtenerTexto(registro, "Caminante"));
 
       const celdaAccion = document.createElement("td");
       const botonEliminar = document.createElement("button");
@@ -482,12 +492,13 @@
 
     function mostrarDetalleLote(registro) {
       lotePendiente = registro;
-      document.getElementById("detalle-codigo-lote").textContent = String(registro.Lote);
-      document.getElementById("detalle-codigo-psr").textContent = String(registro["Codigo PSR"] ?? "");
-      document.getElementById("detalle-nombre-psr").textContent = String(registro["Razon Social (Nombre PSR)"] ?? "");
-      document.getElementById("detalle-caminante").textContent = String(registro.Caminante ?? "");
+      document.getElementById("detalle-codigo-lote").textContent = obtenerTexto(registro, "Lote");
+      document.getElementById("detalle-codigo-psr").textContent = obtenerTexto(registro, "Codigo PSR");
+      document.getElementById("detalle-nombre-psr").textContent =
+        obtenerTexto(registro, "Razon Social (Nombre PSR)", "Nombre PSR");
+      document.getElementById("detalle-caminante").textContent = obtenerTexto(registro, "Caminante");
       document.getElementById("detalle-fecha-asignacion").textContent =
-        String(registro.Fecha ?? registro["Fecha Asignacion"] ?? registro["Fecha Asignación"] ?? "No disponible");
+        obtenerTexto(registro, "Fecha Entrega", "Fecha", "Fecha Asignacion", "Fecha Asignación") || "No disponible";
       detalleLote.showModal();
     }
 
@@ -519,7 +530,7 @@
       mostrarDetalleLote(registro);
     });
 
-    fetch("productos_vendidos.json")
+    fetch("productos_vendidos.json", { cache: "no-store" })
       .then((respuesta) => {
         if (!respuesta.ok) {
           throw new Error(`Error HTTP ${respuesta.status}`);
