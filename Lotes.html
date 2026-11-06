@@ -122,6 +122,14 @@
       font-size: 13px;
     }
 
+    #lista-lotes td:first-child {
+      font-size: 9px;
+    }
+
+    #lista-lotes td:nth-child(4) {
+      font-size: 10px;
+    }
+
     #lista-lotes th:last-child,
     #lista-lotes td:last-child {
       text-align: center;
@@ -351,6 +359,7 @@
         <table id="lista-lotes" aria-live="polite">
           <thead>
             <tr>
+              <th scope="col">Lote</th>
               <th scope="col">Codigo PSR</th>
               <th scope="col">Nombre PSR</th>
               <th scope="col">Caminante</th>
@@ -470,6 +479,7 @@
 
     function agregarFilaLote(registro) {
       const fila = document.createElement("tr");
+      agregarCelda(fila, obtenerTexto(registro, "Lote"));
       agregarCelda(fila, obtenerTexto(registro, "Codigo PSR"));
       agregarCelda(fila, obtenerTexto(registro, "Razon Social (Nombre PSR)", "Nombre PSR"));
       agregarCelda(fila, obtenerTexto(registro, "Caminante"));
