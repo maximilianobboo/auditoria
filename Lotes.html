@@ -179,6 +179,115 @@
       cursor: wait;
     }
 
+    #secuencia-lotes {
+      width: min(360px, calc(100vw - 32px));
+      max-width: none;
+      box-sizing: border-box;
+      margin: auto;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      background: #2e7d32;
+      color: white;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+    }
+
+    #secuencia-lotes::backdrop {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(3px);
+    }
+
+    .secuencia-titulo {
+      margin: 0 0 14px;
+      font-size: 16px;
+    }
+
+    .secuencia-campos {
+      display: grid;
+      gap: 10px;
+    }
+
+    .secuencia-lote {
+      display: grid;
+      gap: 5px;
+      text-align: left;
+    }
+
+    .secuencia-lote-titulo {
+      font-size: 12px;
+    }
+
+    .secuencia-lote-campos {
+      display: flex;
+      gap: 8px;
+    }
+
+    .secuencia-lote-campos label {
+      display: grid;
+      flex: 1;
+      gap: 4px;
+      min-width: 0;
+      font-size: 10px;
+    }
+
+    .secuencia-lote-campos input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .secuencia-campos input {
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid #555;
+      border-radius: 8px;
+      background: #222;
+      color: white;
+      font: inherit;
+    }
+
+    .secuencia-campos input[name$="letras"] {
+      text-transform: uppercase;
+    }
+
+    #aviso-secuencia {
+      margin-top: 10px;
+      color: #fff3cd;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    #aviso-secuencia:empty {
+      display: none;
+    }
+
+    .acciones-secuencia {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .acciones-secuencia button {
+      flex: 1;
+      padding: 9px 5px;
+      border: 1px solid white;
+      border-radius: 8px;
+      background: transparent;
+      color: white;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    #confirmar-secuencia {
+      border-color: #1565c0;
+      background: #1565c0;
+    }
+
+    #cancelar-secuencia {
+      border-color: #c62828;
+      background: #c62828;
+    }
+
     .visually-hidden {
       position: absolute;
       width: 1px;
@@ -351,6 +460,7 @@
         title="Ingresa exactamente 4 números"
         required>
       <button type="submit" aria-label="Agregar lote" disabled>+</button>
+      <button id="abrir-secuencia" type="button" aria-label="Agregar secuencia de lotes" disabled>S</button>
     </form>
     <div id="aviso" role="alert" aria-live="assertive" hidden></div>
     <section class="lista-seccion" aria-labelledby="titulo-lista-lotes">
@@ -403,6 +513,40 @@
       <button id="salir-detalle" type="button">Salir</button>
     </div>
   </dialog>
+  <dialog id="secuencia-lotes" aria-labelledby="titulo-secuencia">
+    <form id="formulario-secuencia" novalidate>
+      <h2 id="titulo-secuencia" class="secuencia-titulo">Agregar secuencia de lotes</h2>
+      <div class="secuencia-campos">
+        <div class="secuencia-lote">
+          <span class="secuencia-lote-titulo">Primer lote</span>
+          <div class="secuencia-lote-campos">
+            <label for="primer-lote-letras">
+              <input id="primer-lote-letras" name="primer-letras" type="text" placeholder="ABC" aria-label="Letras del primer lote" pattern="[A-Za-z]{3}" minlength="3" maxlength="3" autocomplete="off" required>
+            </label>
+            <label for="primer-lote-numeros">
+              <input id="primer-lote-numeros" name="primer-numeros" type="text" placeholder="1234" aria-label="Números del primer lote" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" required>
+            </label>
+          </div>
+        </div>
+        <div class="secuencia-lote">
+          <span class="secuencia-lote-titulo">Último lote</span>
+          <div class="secuencia-lote-campos">
+            <label for="ultimo-lote-letras">
+              <input id="ultimo-lote-letras" name="ultimo-letras" type="text" placeholder="ABC" aria-label="Letras del último lote" pattern="[A-Za-z]{3}" minlength="3" maxlength="3" autocomplete="off" required>
+            </label>
+            <label for="ultimo-lote-numeros">
+              <input id="ultimo-lote-numeros" name="ultimo-numeros" type="text" placeholder="1311" aria-label="Números del último lote" inputmode="numeric" pattern="[0-9]{4}" minlength="4" maxlength="4" autocomplete="off" required>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div id="aviso-secuencia" role="alert" aria-live="assertive"></div>
+      <div class="acciones-secuencia">
+        <button id="confirmar-secuencia" type="submit">Enlistar lotes</button>
+        <button id="cancelar-secuencia" type="button">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
   <script>
     const formularioLote = document.querySelector(".lote-form");
     const listaLotes = document.getElementById("lista-lotes");
@@ -410,9 +554,18 @@
     const aviso = document.getElementById("aviso");
     const botonVaciarLista = document.getElementById("vaciar-lista");
     const botonAgregarLote = formularioLote.querySelector('button[type="submit"]');
+    const botonAbrirSecuencia = document.getElementById("abrir-secuencia");
     const detalleLote = document.getElementById("detalle-lote");
     const botonConfirmarLote = document.getElementById("confirmar-lote");
     const botonSalirDetalle = document.getElementById("salir-detalle");
+    const dialogoSecuencia = document.getElementById("secuencia-lotes");
+    const formularioSecuencia = document.getElementById("formulario-secuencia");
+    const campoPrimerLoteLetras = document.getElementById("primer-lote-letras");
+    const campoPrimerLoteNumeros = document.getElementById("primer-lote-numeros");
+    const campoUltimoLoteLetras = document.getElementById("ultimo-lote-letras");
+    const campoUltimoLoteNumeros = document.getElementById("ultimo-lote-numeros");
+    const avisoSecuencia = document.getElementById("aviso-secuencia");
+    const botonCancelarSecuencia = document.getElementById("cancelar-secuencia");
     const campoLetras = formularioLote.elements.letras;
     const campoNumeros = formularioLote.elements.numeros;
     let temporizadorAviso;
@@ -427,8 +580,114 @@
       campoNumeros.value = campoNumeros.value.replace(/[^0-9]/g, "").slice(0, 4);
     });
 
+    for (const [campo, campoNumerosSiguiente] of [
+      [campoPrimerLoteLetras, campoPrimerLoteNumeros],
+      [campoUltimoLoteLetras, campoUltimoLoteNumeros]
+    ]) {
+      campo.addEventListener("input", () => {
+        campo.value = campo.value.replace(/[^A-Za-z]/g, "").slice(0, 3);
+        if (campo.value.length === 3) campoNumerosSiguiente.focus();
+      });
+    }
+
+    for (const campo of [campoPrimerLoteNumeros, campoUltimoLoteNumeros]) {
+      campo.addEventListener("input", () => {
+        campo.value = campo.value.replace(/[^0-9]/g, "").slice(0, 4);
+      });
+    }
+
     botonVaciarLista.addEventListener("click", () => {
       cuerpoListaLotes.replaceChildren();
+    });
+
+    botonAbrirSecuencia.addEventListener("click", () => {
+      formularioSecuencia.reset();
+      avisoSecuencia.textContent = "";
+      dialogoSecuencia.showModal();
+      campoPrimerLoteLetras.focus();
+    });
+
+    botonCancelarSecuencia.addEventListener("click", () => {
+      dialogoSecuencia.close();
+    });
+
+    dialogoSecuencia.addEventListener("close", () => {
+      formularioSecuencia.reset();
+      avisoSecuencia.textContent = "";
+      botonAbrirSecuencia.focus();
+    });
+
+    formularioSecuencia.addEventListener("submit", (evento) => {
+      evento.preventDefault();
+      avisoSecuencia.textContent = "";
+
+      const letrasInicio = campoPrimerLoteLetras.value.toUpperCase();
+      const numeroInicioTexto = campoPrimerLoteNumeros.value;
+      const letrasFin = campoUltimoLoteLetras.value.toUpperCase();
+      const numeroFinTexto = campoUltimoLoteNumeros.value;
+
+      if (!/^[A-Z]{3}$/.test(letrasInicio)) {
+        mostrarAvisoSecuencia("Ingresa exactamente 3 letras para el primer lote.", campoPrimerLoteLetras);
+        return;
+      }
+
+      if (!/^[0-9]{4}$/.test(numeroInicioTexto)) {
+        mostrarAvisoSecuencia("Ingresa exactamente 4 números para el primer lote.", campoPrimerLoteNumeros);
+        return;
+      }
+
+      if (!/^[A-Z]{3}$/.test(letrasFin)) {
+        mostrarAvisoSecuencia("Ingresa exactamente 3 letras para el último lote.", campoUltimoLoteLetras);
+        return;
+      }
+
+      if (!/^[0-9]{4}$/.test(numeroFinTexto)) {
+        mostrarAvisoSecuencia("Ingresa exactamente 4 números para el último lote.", campoUltimoLoteNumeros);
+        return;
+      }
+
+      if (letrasInicio !== letrasFin) {
+        mostrarAvisoSecuencia("Los dos lotes deben comenzar con las mismas 3 letras.", campoUltimoLoteLetras);
+        return;
+      }
+
+      const numeroInicio = Number(numeroInicioTexto);
+      const numeroFin = Number(numeroFinTexto);
+      if (numeroInicio > numeroFin) {
+        mostrarAvisoSecuencia("El primer lote debe ser menor o igual al último.", campoPrimerLoteNumeros);
+        return;
+      }
+
+      const registrosPorLote = new Map();
+      for (const registro of lotesDisponibles) {
+        const codigo = obtenerTexto(registro, "Lote").toUpperCase();
+        if (!registrosPorLote.has(codigo)) {
+          registrosPorLote.set(codigo, registro);
+        }
+      }
+
+      let agregados = 0;
+      let faltantes = 0;
+      for (let numero = numeroInicio; numero <= numeroFin; numero += 1) {
+        const codigo = `${letrasInicio}${String(numero).padStart(4, "0")}`;
+        const registro = registrosPorLote.get(codigo);
+        if (registro) {
+          agregarFilaLote(registro);
+          agregados += 1;
+        } else {
+          faltantes += 1;
+        }
+      }
+
+      dialogoSecuencia.close();
+      if (faltantes > 0) {
+        mostrarAviso(
+          `Se agregaron ${agregados} lotes. No se encontraron ${faltantes} en la secuencia.`,
+          null
+        );
+      } else {
+        mostrarAviso(`Se agregaron ${agregados} lotes a la lista.`, null);
+      }
     });
 
     botonSalirDetalle.addEventListener("click", () => {
@@ -458,6 +717,11 @@
         aviso.hidden = true;
         aviso.textContent = "";
       }, 3000);
+      if (campo) campo.focus();
+    }
+
+    function mostrarAvisoSecuencia(mensaje, campo) {
+      avisoSecuencia.textContent = mensaje;
       if (campo) campo.focus();
     }
 
@@ -553,6 +817,7 @@
         }
         lotesDisponibles = datos;
         botonAgregarLote.disabled = false;
+        botonAbrirSecuencia.disabled = false;
       })
       .catch((error) => {
         console.error("Error cargando productos vendidos:", error);
